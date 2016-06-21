@@ -60,6 +60,9 @@ public static SphereBodyAndMesh createSphere(double radius,double mass,double x,
 }
 
 public void syncPosition(){
+	if(body==null || mesh==null){
+		return;
+	}
 	body.getMotionState().getWorldTransform(transform);
 	mesh.getPosition().set(transform.getOrigin().x(), transform.getOrigin().y(), transform.getOrigin().z());
 	

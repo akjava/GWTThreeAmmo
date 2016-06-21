@@ -113,4 +113,19 @@ public class DistanceConstraintProperties {
 	private Vector3 angularUpperLimit=THREE.Vector3().setScalar(Math.PI/2);
 	private Vector3 linearLowerLimit=THREE.Vector3();
 	private Vector3 linearUpperLimit=THREE.Vector3();
+	public void setEnableSpringsAll(boolean value) {
+		for(int i=0;i<6;i++){
+			enableSprings.set(i, value);
+		}
+	}
+	public void setStiffnessAll(double value) {
+		for(int i=0;i<6;i++){
+			stiffnesses.set(i, value);
+		}
+	}
+	public void setDampingAll(double value) {
+		for(int i=0;i<6;i++){
+			dampings.set(i, value);
+		}
+	}
 }

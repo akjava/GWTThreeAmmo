@@ -125,12 +125,20 @@ public ConstraintAndMesh createGeneric6DofSpringConstraintConstraint(btRigidBody
 	return cm;
 }
 
-public BodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
-	BodyAndMesh object=  BodyAndMesh.createSphere(radius, mass, x, y, z, material);
-	scene.add( object.getMesh());
-	world.addRigidBody(object.getBody());
+public void addBodyMesh(BodyAndMesh object){
+	if( object.getMesh()!=null){
+	   scene.add( object.getMesh());
+	}
+	if(object.getBody()!=null){
+		world.addRigidBody(object.getBody());
+	}
 	
 	autoSyncingBodies.add(object);
+}
+
+public BodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
+	BodyAndMesh object=  BodyAndMesh.createSphere(radius, mass, x, y, z, material);
+	addBodyMesh(object);
 	return object;
 }
 
