@@ -34,15 +34,17 @@ this.setY(y);
 this.setZ(z);
 }-*/;
 
-public final  native void copy(Vector3 vector)/*-{
+public final  native btVector3 copy(Vector3 vector)/*-{
 this.setX(vector.x);
 this.setY(vector.y);
 this.setZ(vector.z);
+return this;
 }-*/;
 
-public final  native void copyTo(Vector3 vector)/*-{
+public final  native Vector3 copyTo(Vector3 vector)/*-{
 vector.x=this.x();
 vector.y=this.y();
 vector.z=this.z();
+return vector;
 }-*/;
 }

@@ -1,5 +1,8 @@
 package com.akjava.gwt.threeammo.client.core;
 
+import com.akjava.gwt.three.client.js.THREE;
+import com.akjava.gwt.three.client.js.math.Vector3;
+
 
 public class btRigidBody extends AmmoObject{
 protected btRigidBody(){}
@@ -29,6 +32,16 @@ this._mass=param;
 /*
  * for static object
  */
+public final Vector3 getPosition(){
+	btTransform transform=getTransform();
+	if(transform==null){
+		transform=Ammo.btTransformWithIdentity();
+		setTransform(transform);
+		getDestroyWiths().push(transform);
+	}
+	this.getMotionState().getWorldTransform(transform);
+	return transform.getOrigin().copyTo(THREE.Vector3());
+}
 public final void setPosition(double x,double y,double z){
 	btTransform transform=getTransform();
 	if(transform==null){

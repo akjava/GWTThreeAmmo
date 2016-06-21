@@ -7,15 +7,12 @@ import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.gwt.threeammo.client.core.Ammo;
 import com.akjava.gwt.threeammo.client.core.btRigidBody;
 import com.akjava.gwt.threeammo.client.core.btTransform;
+import com.akjava.gwt.threeammo.client.core.btVector3;
 
-public class BodyAndMesh {
-private String name;
-public String getName() {
-	return name;
-}
-public void setName(String name) {
-	this.name = name;
-}
+public class BodyAndMesh extends AmmoAndThreeContainer{
+
+
+
 private btRigidBody body;
 public BodyAndMesh(btRigidBody body, Mesh mesh) {
 	super();
@@ -23,6 +20,7 @@ public BodyAndMesh(btRigidBody body, Mesh mesh) {
 	this.mesh = mesh;
 	transform=Ammo.btTransform();
 }
+
 private Mesh mesh;
 btTransform transform;
 
@@ -48,15 +46,17 @@ public void copy(BodyAndMesh newBm){
 }
 
 
-public static BodyAndMesh createSphere(double radius,double mass,Vector3 position,Material material){
+public static SphereBodyAndMesh createSphere(double radius,double mass,Vector3 position,Material material){
 	return createSphere(radius, mass, position.getX(), position.getY(), position.getZ(), material);
 }
 
-public static BodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
+public static SphereBodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
 	btRigidBody body=makeSphere(radius,mass,x,y,z);
+	
 	Mesh mesh=THREE.Mesh(THREE.SphereGeometry(radius, 10, 10),material);
 	mesh.setPosition(x, y, z);
-	return new BodyAndMesh(body, mesh);
+	SphereBodyAndMesh sphere= new SphereBodyAndMesh(radius,body, mesh);
+	return sphere;
 }
 
 public void syncPosition(){
@@ -99,5 +99,16 @@ var form = new $wnd.Ammo.btTransform();
     
     return body;
 }-*/;
+
+/*
+ * seems low quality
+ */
+//I'm not sure how effect simulation,but only easy way to resize
+public void setScale(double x, double y, double z) {
+	mesh.setScale(x, y, z);
+	btVector3 scale=Ammo.btVector3(x, y, z);
+	body.getCollisionShape().setLocalScaling(scale);
+	scale.destroy();
+}
 
 }

@@ -26,9 +26,9 @@ public class AmmoUtils {
 	return $wnd.isNaN(object.x) || $wnd.isNaN(object.y)|| $wnd.isNaN(object.z) || $wnd.isNaN(object.w);
 	}-*/;
 
-	public static void setBodyMaterial(btRigidBody body, BodyMaterial spherehMaterial) {
-		body.setFriction(spherehMaterial.getFriction());
-		body.setRestitution(spherehMaterial.getRestitution());
-		body.setDamping(spherehMaterial.getDamping().getX(), spherehMaterial.getDamping().getY());
+	public static void updateBodyProperties(btRigidBody body, BodyProperties spherehProperties) {
+		body.setFriction(spherehProperties.getFriction());
+		body.setRestitution(spherehProperties.getRestitution());
+		body.setDamping(spherehProperties.getDamping().getX(), spherehProperties.getDamping().getY());
 	}
 }

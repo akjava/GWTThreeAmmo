@@ -1,8 +1,8 @@
 #GWT-Three.js-Ammo
 ##why don't I use physjis
-I 'm going to try soft-body.
+I'm going to try soft-body.
 
-I'd like to write a program without javascript,that why still I'm using GWT.
+I'd like to write a program without javascript,that why still I'm using GWT(I'm familiar with Eclipse-IDE,this is not good at javascript).
 To extend physjis,it's need javascript knowledge.
 
 #Reference

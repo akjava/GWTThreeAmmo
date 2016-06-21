@@ -10,4 +10,9 @@ public final  native btSphereShape castToSphereShape()/*-{
 return this;
 }-*/;
 
+
+public final  native void setLocalScaling(btVector3 scalling)/*-{
+this.setLocalScaling(scalling);
+}-*/;
+
 }

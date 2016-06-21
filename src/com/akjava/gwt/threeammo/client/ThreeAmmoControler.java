@@ -12,6 +12,7 @@ import com.akjava.gwt.three.client.js.scenes.Scene;
 import com.akjava.gwt.threeammo.client.core.Ammo;
 import com.akjava.gwt.threeammo.client.core.AmmoObject;
 import com.akjava.gwt.threeammo.client.core.btDiscreteDynamicsWorld;
+import com.akjava.gwt.threeammo.client.core.btGeneric6DofSpringConstraint;
 import com.akjava.gwt.threeammo.client.core.btQuaternion;
 import com.akjava.gwt.threeammo.client.core.btRigidBody;
 import com.akjava.gwt.threeammo.client.core.btTransform;
@@ -27,15 +28,25 @@ public Scene getScene() {
 }
 
 
-public void destroyConstraint(btTypedConstraint constraint){
+public void destroyConstraintOnly(btTypedConstraint constraint){
 	world.removeConstraint(constraint);
 	
 	garbage.push(constraint);
 }
 
+public void destroyConstraintAndMesh(ConstraintAndMesh data){
+	if(data.getMesh()!=null){
+		scene.remove(data.getMesh());
+	}
+	autoSyncingConstraints.remove(data);
+	destroyConstraintOnly(data.getConstraint());
+}
+
 public void destroyBodyAndMesh(BodyAndMesh data){
-	scene.remove(data.getMesh());
-	objects.remove(data);
+	if(data.getMesh()!=null){
+		scene.remove(data.getMesh());
+	}
+	autoSyncingBodies.remove(data);
 	garbage.push(data.transform);//no need anymore
 	destroyRigidBody(data.getBody());
 }
@@ -46,7 +57,8 @@ private void destroyRigidBody(btRigidBody body){
 }
 
 
-private List<BodyAndMesh> objects=Lists.newArrayList();
+private List<ConstraintAndMesh> autoSyncingConstraints=Lists.newArrayList();
+private List<BodyAndMesh> autoSyncingBodies=Lists.newArrayList();
 private JsArray<AmmoObject> garbage=JsArray.createArray().cast();
 public void setScene(Scene scene) {
 	this.scene = scene;
@@ -74,18 +86,51 @@ public void update(){
 
 public void update(double dt){
 	world.stepSimulation(dt, 0);
-	for(BodyAndMesh object:objects){
+	for(BodyAndMesh object:autoSyncingBodies){
 		object.syncPosition();
+	}
+	
+	for(ConstraintAndMesh object:autoSyncingConstraints){
+		//TODO support sync
 	}
 	
 	deleteGarbages();
 }
+
+public void updateConstraint(btGeneric6DofSpringConstraint newConstraint,DistanceConstraintProperties data){
+
+	for(int i=0;i<6;i++){
+		newConstraint.enableSpring(i, data.getEnableSprings().get(i));
+		newConstraint.setStiffness(i, data.getStiffnesses().get(i));
+		newConstraint.setDamping(i, data.getDampings().get(i));
+	}
+	
+	newConstraint.setAngularLowerLimit(makeVector3(data.getAngularLowerLimit()));
+	newConstraint.setAngularUpperLimit(makeVector3(data.getAngularUpperLimit()));
+	
+	newConstraint.setLinearLowerLimit(makeVector3(data.getLinearLowerLimit().clone().multiplyScalar(data.getBaseDistance())));
+	newConstraint.setLinearUpperLimit(makeVector3(data.getLinearUpperLimit().clone().multiplyScalar(data.getBaseDistance())));
+}
+
+
+public ConstraintAndMesh createGeneric6DofSpringConstraintConstraint(btRigidBody body1,btRigidBody body2,btTransform frameInA,btTransform frameInB,boolean disableCollisionsBetweenLinkedBodies){
+	btGeneric6DofSpringConstraint constraint= Ammo.btGeneric6DofSpringConstraint(body1, body2, frameInA, frameInB, true);
+	getWorld().addConstraint(constraint, disableCollisionsBetweenLinkedBodies);
+	
+	ConstraintAndMesh cm=new ConstraintAndMesh(constraint, null);
+	
+	autoSyncingConstraints.add(cm);
+	//TODO make line or something
+	
+	return cm;
+}
+
 public BodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
 	BodyAndMesh object=  BodyAndMesh.createSphere(radius, mass, x, y, z, material);
 	scene.add( object.getMesh());
 	world.addRigidBody(object.getBody());
 	
-	objects.add(object);
+	autoSyncingBodies.add(object);
 	return object;
 }
 
@@ -192,7 +237,7 @@ public void setRadiusWithRecreate(double radius,BodyAndMesh bm){
 	
 	destroyBodyAndMesh(bm);
 	bm.copy(newOne);
-	objects.add(bm);//removed when destroyBodyAndMesh
+	autoSyncingBodies.add(bm);//removed when destroyBodyAndMesh
 	
 	scene.add( bm.getMesh());
 	world.addRigidBody(bm.getBody());

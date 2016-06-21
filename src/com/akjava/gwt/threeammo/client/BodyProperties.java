@@ -3,7 +3,7 @@ package com.akjava.gwt.threeammo.client;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.math.Vector2;
 
-public class BodyMaterial {
+public class BodyProperties {
 	private double  friction;
 	private double  restitution;
 	private Vector2 damping=THREE.Vector2();

@@ -17,8 +17,6 @@ public class btSphereShape extends btCollisionShape{
 protected btSphereShape(){}
 
 
-//public final  native void setLocalScaling(btVector3 scalling)/*-{
-//this.setLocalScaling(scalling);
-//}-*/;
+
 
 }
