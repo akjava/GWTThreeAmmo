@@ -63,4 +63,16 @@ public class BodyAndMeshFunctions {
 			return value.getQuaternion();
 		}
 	}
+	
+	public class CloneMultiply implements Function<Vector3,Vector3>{
+		private double multipl;
+		public CloneMultiply(double multiple){
+			this.multipl=multiple;
+		}
+		@Override
+		public Vector3 apply(Vector3 input) {
+			// TODO Auto-generated method stub
+			return input.clone().multiplyScalar(multipl);
+		}
+	}
 }
