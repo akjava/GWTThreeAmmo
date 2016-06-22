@@ -40,14 +40,14 @@ public class PointsToGeometry {
 	public Geometry createGeometry(List<Vector3> points,int slices,double tick,boolean connectHorizontal){
 		Geometry geometry=THREE.Geometry();
 		
-		stacks=(points.size()/(slices+1))-1;
+		stacks=(points.size()/(slices+1))-1; //stacks is face count.not vertex count
 		
 		
 		vBase=1.0-tickUv*2;
 		
 		for(int i=0;i<=stacks;i++){
 			for(int j=0;j<=slices;j++){
-				int index=i*(stacks+1)+j;
+				int index=i*(slices+1)+j;
 				geometry.getVertices().push(points.get(index).clone());
 			}
 		}
@@ -76,10 +76,7 @@ public class PointsToGeometry {
 			Vector2	uvc = getUv((int)j+1,(int)i+1);
 			Vector2	uvd = getUv((int)j,(int)i+1);
 			
-			ThreeLog.log(j+","+i,uva);
-			ThreeLog.log((j+1)+","+i,uvb);
-			ThreeLog.log((j+1)+","+(i+1),uvd);
-			ThreeLog.log(j+","+(i+1),uvc);
+			
 			
 
 				geometry.getFaces().push( THREE.Face3( a, b, d ) );

@@ -135,12 +135,12 @@ public WeightResult autoWeight(Geometry geometry,JsArray<AnimationBone> bones,Li
 		}
 		
 		if(i==121){
-			ThreeLog.log("distance",vector4);
+		//	ThreeLog.log("distance",vector4);
 		}
 		
 		vector4.normalize();
 		if(i==121){
-			ThreeLog.log("normalized",vector4);
+		//	ThreeLog.log("normalized",vector4);
 		}
 		
 		double total=0;
@@ -160,7 +160,7 @@ public WeightResult autoWeight(Geometry geometry,JsArray<AnimationBone> bones,Li
 		}
 		
 		if(i==121){
-			ThreeLog.log("clone one is bigger",vector4);
+		//	ThreeLog.log("clone one is bigger",vector4);
 		}
 		
 		double total2=0;
@@ -186,7 +186,7 @@ public WeightResult autoWeight(Geometry geometry,JsArray<AnimationBone> bones,Li
 		
 		
 		if(i==121){
-			ThreeLog.log("modify total",vector4);
+		//	ThreeLog.log("modify total",vector4);
 		}
 		
 		
