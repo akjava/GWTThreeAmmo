@@ -32,17 +32,27 @@ public class PlainBoneCreator {
 		bone.setPos(THREE.Vector3());
 		bones.push(bone);
 		
-		int horizontalVertex=slices+1;
-		int verticalVertex=positions.size()/horizontalVertex;
+		int horizontalVertexCount=slices+1;
+		int verticalVertexCount=positions.size()/horizontalVertexCount;
+		
+		Vector3 rootPos=THREE.Vector3();
+		
+		for(int i=0;i<horizontalVertexCount;i++){
+		
+			Vector3 position=positions.get(i);
+			rootPos.add(position);
+		}
+		rootPos.divideScalar(horizontalVertexCount);
+		bone.setPos(rootPos);
 		
 		int boneIndex=1;//index 0 added above
-		for(int i=0;i<horizontalVertex;i++){
+		for(int i=0;i<horizontalVertexCount;i++){
 			int parent=0;
-			Vector3 parentPos=THREE.Vector3();
+			Vector3 parentPos=rootPos.clone();
 			
-			for(int j=0;j<verticalVertex;j++){
+			for(int j=0;j<verticalVertexCount;j++){
 				
-				int ind=(horizontalVertex)*j+i;
+				int ind=(horizontalVertexCount)*j+i;
 				
 				Vector3 position=positions.get(ind);
 				
