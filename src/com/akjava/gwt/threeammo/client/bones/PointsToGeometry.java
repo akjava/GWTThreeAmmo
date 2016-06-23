@@ -18,8 +18,12 @@ import com.google.gwt.core.client.JsArray;
  *
  */
 public class PointsToGeometry {
-	//double tickUv=0.01;
-	double tickUv=0.25;//for debug
+	double tickUv=0.01;//Texture area 
+	/*
+	 * left-top is center area.bottom edge is top.right edge is left
+	 * 
+	 */
+	//double tickUv=0.25;//for debug
 	/*
 	 * hand make geometry
 	 * 
@@ -51,7 +55,11 @@ public class PointsToGeometry {
 	/*
 	 * not thread safe
 	 */
-	public Geometry createGeometry(List<Vector3> points,int slices,double tick,boolean connectHorizontal){
+	public Geometry createGeometry(List<Vector3> points,int slices,double thick,boolean connectHorizontal){
+		if(thick==0){
+			LogUtils.log("0 thick not support yet");
+		}
+		
 		Geometry geometry=THREE.Geometry();
 		
 		stacks=(points.size()/(slices+1))-1; //stacks is face count.not vertex count
@@ -147,9 +155,9 @@ public class PointsToGeometry {
 					vertexNormal=normals.get(index).normalize();
 				}
 				
-				ThreeLog.log("upNormal",vertexNormal.clone().multiplyScalar(tick));
+				//ThreeLog.log("upNormal",vertexNormal.clone().multiplyScalar(thick));
 				
-				v.add(vertexNormal.clone().multiplyScalar(tick));
+				v.add(vertexNormal.clone().multiplyScalar(thick));
 				
 				geometry.getVertices().push(v);
 			}
