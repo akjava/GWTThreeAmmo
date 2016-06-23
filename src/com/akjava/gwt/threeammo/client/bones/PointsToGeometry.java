@@ -113,7 +113,7 @@ public class PointsToGeometry {
 		
 		int frontGeometrySize=geometry.getVertices().length();
 		
-		LogUtils.log("first-surface:"+frontGeometrySize);
+		//LogUtils.log("first-surface:"+frontGeometrySize);
 		
 		geometry.computeFaceNormals();
 		geometry.computeVertexNormals();
@@ -189,6 +189,7 @@ public class PointsToGeometry {
 		
 		//top
 		
+		if(thick!=0){
 		
 		for ( double j = 0; j < slices; j ++ ) {
 			int i=0;
@@ -243,6 +244,7 @@ public class PointsToGeometry {
 			pushUv(uvs, uvd.clone(), uvc, uvb.clone());
 			
 		}
+		}
 		
 		if(connectHorizontal){
 		for ( double i = 0; i < stacks; i ++ ) {
@@ -286,6 +288,7 @@ public class PointsToGeometry {
 		
 		
 		}else{//create side
+			if(thick!=0){
 			for ( double i = 0; i < stacks; i ++ ) {
 				int j=0;
 				int	a = (int)(i * sliceCount + j);
@@ -331,6 +334,7 @@ public class PointsToGeometry {
 
 				geometry.getFaces().push(THREE.Face3( b, c, d ) );
 				pushUv(uvs, uvb.clone(), uvc, uvd.clone());	
+			}
 			}
 		}
 		
