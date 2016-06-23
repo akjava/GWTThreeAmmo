@@ -75,7 +75,8 @@ public class PlainBoneCreator {
 		return bones;
 	}
 	
-	public static void syncBones(ThreeAmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles){
+	
+public static void syncBones(ThreeAmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles,double divided){
 		
 		
 		JsArray<Bone> bones=mesh.getSkeleton().getBones();
@@ -94,14 +95,19 @@ public class PlainBoneCreator {
 			int atX=Integer.parseInt(name[0]);
 			int atY=Integer.parseInt(name[1]);
 			
-			if(atY==0){ //has ?
-				continue;//locked;
+			if(atY==0){//is this work?
+				BodyAndMesh bm=getParticle(particles,w,atX, atY);
+				ammoControler.updateBone(bones.get(i), bm,null,divided);
 			}else{
 				//should i make a body and bone?
 				BodyAndMesh bm=getParticle(particles,w,atX, atY);
-				ammoControler.updateBone(bones.get(i), bm,null);
+				ammoControler.updateBone(bones.get(i), bm,null,divided);
 			}	
 		}
+	}
+
+	public static void syncBones(ThreeAmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles){
+		syncBones(ammoControler, mesh, w, particles,1);
 	}
 	
 	public static BodyAndMesh getParticle(List<BodyAndMesh> particles,int w,int x,int y){

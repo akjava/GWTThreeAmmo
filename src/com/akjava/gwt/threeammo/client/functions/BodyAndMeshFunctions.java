@@ -64,7 +64,7 @@ public class BodyAndMeshFunctions {
 		}
 	}
 	
-	public class CloneMultiply implements Function<Vector3,Vector3>{
+	public static  class CloneMultiply implements Function<Vector3,Vector3>{
 		private double multipl;
 		public CloneMultiply(double multiple){
 			this.multipl=multiple;
@@ -73,6 +73,17 @@ public class BodyAndMeshFunctions {
 		public Vector3 apply(Vector3 input) {
 			// TODO Auto-generated method stub
 			return input.clone().multiplyScalar(multipl);
+		}
+	}
+	public static class CloneDivided implements Function<Vector3,Vector3>{
+		private double multipl;
+		public CloneDivided(double multiple){
+			this.multipl=multiple;
+		}
+		@Override
+		public Vector3 apply(Vector3 input) {
+			// TODO Auto-generated method stub
+			return input.clone().divideScalar(multipl);
 		}
 	}
 }

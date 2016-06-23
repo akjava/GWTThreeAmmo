@@ -31,6 +31,20 @@ public class PointsToGeometry {
 	double vBase;
 	int stacks;
 	
+	private Vector3 normal;
+	
+	public Vector3 getVertexNormal() {
+		return normal;
+	}
+	public void setVertexNormal(Vector3 normal) {
+		this.normal = normal;
+	}
+	
+	public PointsToGeometry vertexNormal(Vector3 normal){
+		this.normal = normal;
+		return this;
+	}
+	
 	private Vector2 getUv(int u,int v){
 		return THREE.Vector2( (double)u / slicesPlus*uBase, (double)v / stacks *vBase);
 	}
@@ -117,12 +131,25 @@ public class PointsToGeometry {
 			}
 		}
 		
+		if(normal!=null){
+			normal.normalize();
+		}
+		
+		//second one
 		for(int i=0;i<=stacks;i++){
 			for(int j=0;j<=slices;j++){
-				int index=i*(stacks+1)+j;
+				int index=i*(slices+1)+j;
 				Vector3 v=points.get(index).clone();
 				//ThreeLog.log("normal:",normals.get(index));
-				v.add(normals.get(index).normalize().multiplyScalar(tick));
+				
+				Vector3 vertexNormal=normal;
+				if(vertexNormal==null){
+					vertexNormal=normals.get(index).normalize();
+				}
+				
+				ThreeLog.log("upNormal",vertexNormal.clone().multiplyScalar(tick));
+				
+				v.add(vertexNormal.clone().multiplyScalar(tick));
 				
 				geometry.getVertices().push(v);
 			}

@@ -202,8 +202,12 @@ public Vector3AndQuaternion getWorldTransform(BodyAndMesh bm,btTransform transfo
 }
 
 public void updateBone(Bone bone,BodyAndMesh bm,btTransform transform){
+	updateBone(bone, bm, transform, 1);
+}
+
+public void updateBone(Bone bone,BodyAndMesh bm,btTransform transform,double divided){
 	Vector3AndQuaternion vq=getWorldTransform(bm,transform);
-	updateBone(bone, vq.getVector3(), vq.getQuaternion());
+	updateBone(bone, vq.getVector3(), vq.getQuaternion(),divided);
 }
 
 /*
@@ -214,7 +218,7 @@ public void updateBone(Bone bone,BodyAndMesh bm,btTransform transform){
  * 
  * position and rotation is based and ammo'getWorldTransform
  */
-public void updateBone(Bone bone,Vector3 position,Quaternion rotation){
+public void updateBone(Bone bone,Vector3 position,Quaternion rotation,double divided){
 	bone.updateMatrixWorld(true);
 	Quaternion q2=THREE.Quaternion().setFromRotationMatrix(bone.getMatrixWorld());
 	q2.conjugate();
@@ -224,14 +228,16 @@ public void updateBone(Bone bone,Vector3 position,Quaternion rotation){
 	bone.getQuaternion().copy(q2);
 	
 	Vector3 v1=THREE.Vector3();
-	v1.copy(position);
+	v1.copy(position).divideScalar(divided);//some scale modifying,
 	bone.worldToLocal(v1);//what is this?
 	v1.add(bone.getPosition());
 	
 	bone.getPosition().copy(v1);
 	bone.updateMatrixWorld(true);
 }
-
+public void updateBone(Bone bone,Vector3 position,Quaternion rotation){
+	updateBone(bone, position, rotation, 1);
+}
 /*
  * delete and recreate totally costly function,it's better to use only for static 
  *
