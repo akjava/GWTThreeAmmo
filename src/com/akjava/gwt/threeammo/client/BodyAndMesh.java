@@ -51,12 +51,28 @@ public static SphereBodyAndMesh createSphere(double radius,double mass,Vector3 p
 }
 
 public static SphereBodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
-	btRigidBody body=makeSphere(radius,mass,x,y,z);
+	btRigidBody body=makeSphereBody(radius,mass,x,y,z);
 	
 	Mesh mesh=THREE.Mesh(THREE.SphereGeometry(radius, 10, 10),material);
 	mesh.setPosition(x, y, z);
 	SphereBodyAndMesh sphere= new SphereBodyAndMesh(radius,body, mesh);
 	return sphere;
+}
+
+public static BoxBodyAndMesh createBox(Vector3 halfSize,double mass,Vector3 position,Material material){
+	return createBox(halfSize, mass, position.getX(), position.getY(), position.getZ(), material);
+}
+
+
+public static BoxBodyAndMesh createBox(Vector3 size,double mass,double x,double y,double z,Material material){
+	btVector3 vec3=Ammo.btVector3(size.getX()/2, size.getY()/2, size.getZ()/2);
+	btRigidBody body=makeBoxBody(vec3,mass,x,y,z);
+	vec3.destroy();
+	
+	Mesh mesh=THREE.Mesh(THREE.BoxGeometry(size.getX(), size.getY(), size.getZ()),material);
+	mesh.setPosition(x, y, z);
+	BoxBodyAndMesh box= new BoxBodyAndMesh(size.clone(),body, mesh);
+	return box;
 }
 
 public void syncPosition(){
@@ -69,10 +85,15 @@ public void syncPosition(){
 }
 
 public static final   btRigidBody makeSphereBody(double radius,double mass,Vector3 pos){
-	return makeSphere(radius, mass, pos.getX(),pos.getY(),pos.getZ());
+	return makeSphereBody(radius, mass, pos.getX(),pos.getY(),pos.getZ());
 }
 
-public static final  native btRigidBody makeSphere(double radius,double mass,double x,double y,double z)/*-{
+public static final   btRigidBody makeBoxBody(btVector3 halfSize,double mass,Vector3 pos){
+	return makeBoxBody(halfSize, mass, pos.getX(),pos.getY(),pos.getZ());
+}
+
+//TODO need rotate
+public static final  native btRigidBody makeSphereBody(double radius,double mass,double x,double y,double z)/*-{
 var pos=new $wnd.Ammo.btVector3(x, y, z);
 var form = new $wnd.Ammo.btTransform();
     form.setIdentity();
@@ -83,13 +104,16 @@ var form = new $wnd.Ammo.btTransform();
     if(mass!=0){
     	sphere.calculateLocalInertia(mass,localInertia);
     }
-    var body= new $wnd.Ammo.btRigidBody(
-        new $wnd.Ammo.btRigidBodyConstructionInfo(
+    var state=new $wnd.Ammo.btDefaultMotionState(form);
+    var info=new $wnd.Ammo.btRigidBodyConstructionInfo(
             mass, 
-            new $wnd.Ammo.btDefaultMotionState(form), 
+            state, 
             sphere, 
             localInertia 
-        )
+        );
+        
+    var body= new $wnd.Ammo.btRigidBody(
+        info
     );
     //btSphere has nothing special method
     //body._sphereShape=sphere;
@@ -98,9 +122,43 @@ var form = new $wnd.Ammo.btTransform();
 
     //only can destroying here,sphere cant destroy
     $wnd.Ammo.destroy(form);
+    //$wnd.Ammo.destroy(info); //can't destroy
+    //$wnd.Ammo.destroy(state); //can't destroy
     $wnd.Ammo.destroy(localInertia);
     
     return body;
+}-*/;
+
+//TODO need rotate
+public static final  native btRigidBody makeBoxBody(btVector3 halfSize,double mass,double x,double y,double z)/*-{
+var pos=new $wnd.Ammo.btVector3(x, y, z);
+var form = new $wnd.Ammo.btTransform();
+  form.setIdentity();
+  form.setOrigin(pos);
+ 
+  var box = new $wnd.Ammo.btBoxShape(halfSize);
+  var localInertia = new $wnd.Ammo.btVector3(0, 0, 0);//
+  if(mass!=0){
+  	box.calculateLocalInertia(mass,localInertia);
+  }
+  var body= new $wnd.Ammo.btRigidBody(
+      new $wnd.Ammo.btRigidBodyConstructionInfo(
+          mass, 
+          new $wnd.Ammo.btDefaultMotionState(form), 
+          box, 
+          localInertia 
+      )
+  );
+  //btSphere has nothing special method
+  //body._sphereShape=sphere;
+  
+  body._mass=mass;
+
+  //only can destroying here,sphere cant destroy
+  $wnd.Ammo.destroy(form);
+  $wnd.Ammo.destroy(localInertia);
+  
+  return body;
 }-*/;
 
 /*

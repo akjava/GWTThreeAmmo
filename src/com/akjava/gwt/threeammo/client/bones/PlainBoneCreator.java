@@ -9,7 +9,7 @@ import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Bone;
 import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
 import com.akjava.gwt.threeammo.client.BodyAndMesh;
-import com.akjava.gwt.threeammo.client.ThreeAmmoControler;
+import com.akjava.gwt.threeammo.client.AmmoControler;
 import com.akjava.gwt.threeammo.client.functions.BodyAndMeshFunctions;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -76,7 +76,7 @@ public class PlainBoneCreator {
 	}
 	
 	
-public static void syncBones(ThreeAmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles,double divided){
+public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles,double divided){
 		
 		
 		JsArray<Bone> bones=mesh.getSkeleton().getBones();
@@ -106,7 +106,7 @@ public static void syncBones(ThreeAmmoControler ammoControler,SkinnedMesh mesh,i
 		}
 	}
 
-	public static void syncBones(ThreeAmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles){
+	public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles){
 		syncBones(ammoControler, mesh, w, particles,1);
 	}
 	

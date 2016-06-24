@@ -1,8 +1,6 @@
 package com.akjava.gwt.threeammo.client.core;
 
-import java.util.Map;
-
-import com.google.common.collect.Maps;
+import com.akjava.gwt.three.client.js.math.Vector3;
 
 
 public class Ammo {
@@ -18,12 +16,21 @@ bt.setIdentity();
 return bt;
 }-*/;
 
+public static final  native btVector3 btVector3(Vector3 vec3)/*-{
+return new $wnd.Ammo.btVector3(vec3.x,vec3.y,vec3.z);
+}-*/;
+
 public static final  native btVector3 btVector3(double x,double y,double z)/*-{
 return new $wnd.Ammo.btVector3(x,y,z);
 }-*/;
 
 public static final  native btQuaternion btQuaternion()/*-{
 return new $wnd.Ammo.btQuaternion();
+}-*/;
+
+
+public static final  native btPoint2PointConstraint btPoint2PointConstraint(btRigidBody bodyA,btVector3 pivot0)/*-{
+return new $wnd.Ammo.btPoint2PointConstraint(bodyA,pivot0);
 }-*/;
 
 public static final  native btGeneric6DofSpringConstraint btGeneric6DofSpringConstraint(btRigidBody bodyA,btRigidBody bodyB,btTransform frameInA,btTransform frameInB,boolean useLinearReferenceFrameA)/*-{
@@ -49,17 +56,23 @@ public static final btDiscreteDynamicsWorld initWorld(){
 
 public static native final btDiscreteDynamicsWorld initWorld(double x,double y,double z)/*-{
 
+	//these no need to destroy
     var collisionConfiguration = new $wnd.Ammo.btDefaultCollisionConfiguration();
     var dispatcher = new $wnd.Ammo.btCollisionDispatcher(collisionConfiguration);
     var overlappingPairCache = new $wnd.Ammo.btDbvtBroadphase();
     var solver = new $wnd.Ammo.btSequentialImpulseConstraintSolver();
+    
+    
     var dynamicsWorld = new $wnd.Ammo.btDiscreteDynamicsWorld(
         dispatcher, 
         overlappingPairCache, 
         solver, 
         collisionConfiguration
     );
-    dynamicsWorld.setGravity(new $wnd.Ammo.btVector3(x, y, z));
+    var gravity=new $wnd.Ammo.btVector3(x, y, z);
+    dynamicsWorld.setGravity(gravity);
+    $wnd.Ammo.destroy(gravity);
+    
     return dynamicsWorld;
 
 return world;

@@ -21,7 +21,7 @@ import com.akjava.gwt.threeammo.client.core.btVector3;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.JsArray;
 
-public class ThreeAmmoControler {
+public class AmmoControler {
 private Scene scene;
 public Scene getScene() {
 	return scene;
@@ -72,7 +72,7 @@ public void setWorld(btDiscreteDynamicsWorld world) {
 	this.world = world;
 }
 
-public ThreeAmmoControler(Scene scene, btDiscreteDynamicsWorld world) {
+public AmmoControler(Scene scene, btDiscreteDynamicsWorld world) {
 	super();
 	this.scene = scene;
 	this.world = world;
@@ -82,6 +82,16 @@ private btDiscreteDynamicsWorld world;
 
 public void update(){
 	update(1.0/60);
+}
+
+public void destroyWorld(){
+	for(BodyAndMesh object:autoSyncingBodies){
+		destroyBodyAndMesh(object);
+	}
+	for(ConstraintAndMesh object:autoSyncingConstraints){
+		destroyConstraintAndMesh(object);
+	}
+	world.destroy();
 }
 
 public void update(double dt){
@@ -136,8 +146,24 @@ public void addBodyMesh(BodyAndMesh object){
 	autoSyncingBodies.add(object);
 }
 
-public BodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
-	BodyAndMesh object=  BodyAndMesh.createSphere(radius, mass, x, y, z, material);
+public SphereBodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
+	SphereBodyAndMesh object=  BodyAndMesh.createSphere(radius, mass, x, y, z, material);
+	addBodyMesh(object);
+	return object;
+}
+
+/**
+ * 
+ * @param size (w,h,d) this is not half(sphere use radius)
+ * @param mass if mass is 0 never move
+ * @param x
+ * @param y
+ * @param z
+ * @param material
+ * @return
+ */
+public BoxBodyAndMesh createBox(Vector3 size,double mass,double x,double y,double z,Material material){
+	BoxBodyAndMesh object=  BodyAndMesh.createBox(size, mass, x, y, z, material);
 	addBodyMesh(object);
 	return object;
 }

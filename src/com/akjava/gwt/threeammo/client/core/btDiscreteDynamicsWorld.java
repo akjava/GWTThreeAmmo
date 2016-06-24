@@ -23,12 +23,13 @@ this.removeRigidBody(body);
 public final  native void addConstraint(btTypedConstraint constraint,boolean disableCollisionsBetweenLinkedBodies)/*-{
 this.addConstraint(constraint,disableCollisionsBetweenLinkedBodies);
 }-*/;
+public final  native void addConstraint(btTypedConstraint constraint)/*-{
+this.addConstraint(constraint);
+}-*/;
+
 public final  native void removeConstraint(btTypedConstraint constraint)/*-{
 this.removeConstraint(constraint);
 }-*/;
 
-public final  native void removeConstraint(btRigidBody body)/*-{
-this.removeRigidBody(constraint);
-}-*/;
 
 }

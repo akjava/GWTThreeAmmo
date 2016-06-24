@@ -97,6 +97,34 @@ public final  native void setActivationState(int state)/*-{
 this.setActivationState(state);
 }-*/;
 
+
+//TODO should share it?
+public final  void setLinearVelocity(Vector3 velocity){
+	btVector3 vec=Ammo.btVector3(velocity);
+	setLinearVelocity(vec);
+	vec.destroy();
+}
+public final  void setAngularVelocity(Vector3 velocity){
+	btVector3 vec=Ammo.btVector3(velocity);
+	setAngularVelocity(vec);
+	vec.destroy();
+}
+
+public final  native void setAngularVelocity(btVector3 velocity)/*-{
+this.setAngularVelocity(velocity);
+}-*/;
+public final  native void setLinearVelocity(btVector3 velocity)/*-{
+this.setLinearVelocity(velocity);
+}-*/;
+
+public final  native void setAngularFactor(btVector3 factor)/*-{
+this.setAngularFactor(factor);
+}-*/;
+
+public final  native void setLinearFactor(btVector3 factor)/*-{
+this.setLinearFactor(factor);
+}-*/;
+
 public final  native btTransform  getCenterOfMassTransform()/*-{
 return this.getCenterOfMassTransform();
 }-*/;
