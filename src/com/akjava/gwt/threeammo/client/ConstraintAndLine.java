@@ -1,8 +1,13 @@
 package com.akjava.gwt.threeammo.client;
 
+import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.three.client.java.ThreeLog;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Line;
 import com.akjava.gwt.threeammo.client.core.btTypedConstraint;
+import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofConstraint;
+import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofSpringConstraint;
+import com.akjava.gwt.threeammo.client.core.constraints.btPoint2PointConstraint;
 
 public class ConstraintAndLine extends AmmoAndThreeContainer{
 	private BodyAndMesh body1,body2;
@@ -20,6 +25,26 @@ public class ConstraintAndLine extends AmmoAndThreeContainer{
 		this.body1=body1;
 		this.body2=body2;
 	}
+	
+	
+	/*
+	public String getType(){
+		if(constraint instanceof btPoint2PointConstraint){
+			return "point2point";
+		}
+		
+		if(constraint instanceof btGeneric6DofConstraint){
+			return "generic";
+		}
+		
+		if(constraint instanceof btGeneric6DofSpringConstraint){
+			return "spring";
+		}
+		
+		return null;
+	}
+	*/
+	
 	private Line line;
 	
 	//TODO make interface hasPosition
@@ -37,16 +62,33 @@ public class ConstraintAndLine extends AmmoAndThreeContainer{
 	public void setLine(Line line) {
 		this.line = line;
 	}
+	private boolean enableSync=true;
+	public boolean isEnableSync() {
+		return enableSync;
+	}
+	public void setEnableSync(boolean enableSync) {
+		this.enableSync = enableSync;
+	}
 	//must call after body1 position setted
 	public void sync() {
+		if(!enableSync){
+			return;
+		}
+		
 		line.getGeometry().getVertices().get(0).copy(body1.getMesh().getPosition());
 		if(body2!=null){
 		line.getGeometry().getVertices().get(1).copy(body2.getMesh().getPosition());
 		}else{
+			
+			//Point2PointConstraint
 			if(pivot0!=null){
 				line.getGeometry().getVertices().get(1).copy(pivot0);
 			}
 		}
+		//LogUtils.log(getType());
+		//ThreeLog.log("pt0", line.getGeometry().getVertices().get(0));
+		//ThreeLog.log("pt1", line.getGeometry().getVertices().get(1));
+		
 		line.getGeometry().setVerticesNeedUpdate(true);
 	}
 	

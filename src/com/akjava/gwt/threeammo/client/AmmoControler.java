@@ -21,6 +21,7 @@ import com.akjava.gwt.threeammo.client.core.btRigidBody;
 import com.akjava.gwt.threeammo.client.core.btTransform;
 import com.akjava.gwt.threeammo.client.core.btTypedConstraint;
 import com.akjava.gwt.threeammo.client.core.btVector3;
+import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofConstraint;
 import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofSpringConstraint;
 import com.akjava.gwt.threeammo.client.core.constraints.btPoint2PointConstraint;
 import com.google.common.collect.Lists;
@@ -107,8 +108,9 @@ public void update(double dt){
 		object.syncTransform();
 	}
 	
+	
 	for(ConstraintAndLine object:autoSyncingConstraints){
-		//TODO support sync
+		
 		object.sync();
 	}
 	
@@ -137,9 +139,9 @@ public ConstraintAndLine createPoint2PointConstraint(BodyAndMesh body1,Vector3 p
 	getWorld().addConstraint(constraint);
 	pivot0.destroy();
 	
-	Geometry geo = THREE.Geometry();//var geo = new THREE.Geometry();
-	geo.getVertices().push( THREE.Vector3(  ));//geo.vertices.push( new THREE.Vector3( pos1[0], pos1[1], pos1[2] ) );
-	geo.getVertices().push( THREE.Vector3(  ));//geo.vertices.push( new THREE.Vector3( pos2[0], pos2[1], pos2[2] ) );
+	Geometry geo = THREE.Geometry();
+	geo.getVertices().push( THREE.Vector3(  ));
+	geo.getVertices().push( THREE.Vector3(  ));
 	
 	LineBasicMaterial material=THREE.LineBasicMaterial(GWTParamUtils.LineBasicMaterial().color(0xaaaaaa));
 	
@@ -155,7 +157,9 @@ public ConstraintAndLine createPoint2PointConstraint(BodyAndMesh body1,Vector3 p
 	return cm;
 }
 
-public ConstraintAndLine createGeneric6DofSpringConstraintConstraint(BodyAndMesh body1,BodyAndMesh body2,btTransform frameInA,btTransform frameInB,boolean disableCollisionsBetweenLinkedBodies){
+
+
+public ConstraintAndLine createGeneric6DofSpringConstraint(BodyAndMesh body1,BodyAndMesh body2,btTransform frameInA,btTransform frameInB,boolean disableCollisionsBetweenLinkedBodies){
 	btGeneric6DofSpringConstraint constraint= Ammo.btGeneric6DofSpringConstraint(body1.getBody(), body2.getBody(), frameInA, frameInB, true);
 	getWorld().addConstraint(constraint, disableCollisionsBetweenLinkedBodies);
 	
@@ -167,12 +171,39 @@ public ConstraintAndLine createGeneric6DofSpringConstraintConstraint(BodyAndMesh
 	LineBasicMaterial material=THREE.LineBasicMaterial(GWTParamUtils.LineBasicMaterial().color(0xaaaaaa));
 	
 	Line joint = THREE.Line( geo,material);
-	
+	scene.add(joint);
 	
 	
 	ConstraintAndLine cm=new ConstraintAndLine(constraint,joint,body1,body2);
 	
 	autoSyncingConstraints.add(cm);
+	//TODO make line or something
+	
+	
+	
+	
+	return cm;
+}
+public ConstraintAndLine createGeneric6DofConstraint(BodyAndMesh body1,BodyAndMesh body2,btTransform frameInA,btTransform frameInB,boolean disableCollisionsBetweenLinkedBodies){
+	btGeneric6DofConstraint constraint= Ammo.btGeneric6DofConstraint(body1.getBody(), body2.getBody(), frameInA, frameInB, true);
+	getWorld().addConstraint(constraint, disableCollisionsBetweenLinkedBodies);
+	
+	
+	Geometry geo = THREE.Geometry();//var geo = new THREE.Geometry();
+	geo.getVertices().push( THREE.Vector3(  ));//geo.vertices.push( new THREE.Vector3( pos1[0], pos1[1], pos1[2] ) );
+	geo.getVertices().push( THREE.Vector3(  ));//geo.vertices.push( new THREE.Vector3( pos2[0], pos2[1], pos2[2] ) );
+	
+	//TODO add material and set defualt material option
+	LineBasicMaterial material=THREE.LineBasicMaterial(GWTParamUtils.LineBasicMaterial().color(0xaaaaaa).linewidth(10));
+	
+	Line joint = THREE.Line( geo,material);
+	scene.add(joint);
+	
+	
+	ConstraintAndLine cm=new ConstraintAndLine(constraint,joint,body1,body2);
+	
+	autoSyncingConstraints.add(cm);
+	
 	//TODO make line or something
 	
 	
