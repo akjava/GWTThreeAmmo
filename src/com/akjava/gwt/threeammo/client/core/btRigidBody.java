@@ -32,7 +32,7 @@ this._mass=param;
 /*
  * for static object
  */
-public final Vector3 getPosition(){
+public final Vector3 getReadOnlyPosition(){
 	btTransform transform=getTransform();
 	if(transform==null){
 		transform=Ammo.btTransformWithIdentity();
@@ -41,6 +41,10 @@ public final Vector3 getPosition(){
 	}
 	this.getMotionState().getWorldTransform(transform);
 	return transform.getOrigin().copyTo(THREE.Vector3());
+}
+
+public final void setPosition(Vector3 position){
+	setPosition(position.getX(), position.getY(), position.getZ());
 }
 public final void setPosition(double x,double y,double z){
 	btTransform transform=getTransform();
@@ -75,6 +79,20 @@ return this.getCollisionShape();
 public final  native btMotionState getMotionState()/*-{
 return this.getMotionState();
 }-*/;
+
+public final  native void updateInertiaTensor()/*-{
+this.updateInertiaTensor();
+}-*/;
+
+/**
+ * 
+ * @param mass
+ * @param localInertia must be calcurated
+ */
+public final  native void setMassProps (double mass,btVector3 localInertia)/*-{
+this.setMassProps (mass,localInertia);
+}-*/;
+
 
 /**
  * not working?

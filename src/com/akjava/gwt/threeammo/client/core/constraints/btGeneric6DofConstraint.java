@@ -1,4 +1,8 @@
-package com.akjava.gwt.threeammo.client.core;
+package com.akjava.gwt.threeammo.client.core.constraints;
+
+import com.akjava.gwt.threeammo.client.core.btTypedConstraint;
+import com.akjava.gwt.threeammo.client.core.btVector3;
+
 public class btGeneric6DofConstraint extends btTypedConstraint{
 protected btGeneric6DofConstraint(){}
 

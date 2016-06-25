@@ -1,6 +1,9 @@
 package com.akjava.gwt.threeammo.client.core;
 
 import com.akjava.gwt.three.client.js.math.Vector3;
+import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofConstraint;
+import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofSpringConstraint;
+import com.akjava.gwt.threeammo.client.core.constraints.btPoint2PointConstraint;
 
 
 public class Ammo {

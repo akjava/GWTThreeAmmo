@@ -3,21 +3,26 @@ package com.akjava.gwt.threeammo.client;
 import java.util.List;
 
 import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.three.client.gwt.GWTParamUtils;
 import com.akjava.gwt.three.client.js.THREE;
+import com.akjava.gwt.three.client.js.core.Geometry;
+import com.akjava.gwt.three.client.js.materials.LineBasicMaterial;
 import com.akjava.gwt.three.client.js.materials.Material;
 import com.akjava.gwt.three.client.js.math.Quaternion;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Bone;
+import com.akjava.gwt.three.client.js.objects.Line;
 import com.akjava.gwt.three.client.js.scenes.Scene;
 import com.akjava.gwt.threeammo.client.core.Ammo;
 import com.akjava.gwt.threeammo.client.core.AmmoObject;
 import com.akjava.gwt.threeammo.client.core.btDiscreteDynamicsWorld;
-import com.akjava.gwt.threeammo.client.core.btGeneric6DofSpringConstraint;
 import com.akjava.gwt.threeammo.client.core.btQuaternion;
 import com.akjava.gwt.threeammo.client.core.btRigidBody;
 import com.akjava.gwt.threeammo.client.core.btTransform;
 import com.akjava.gwt.threeammo.client.core.btTypedConstraint;
 import com.akjava.gwt.threeammo.client.core.btVector3;
+import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofSpringConstraint;
+import com.akjava.gwt.threeammo.client.core.constraints.btPoint2PointConstraint;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.JsArray;
 
@@ -34,9 +39,9 @@ public void destroyConstraintOnly(btTypedConstraint constraint){
 	garbage.push(constraint);
 }
 
-public void destroyConstraintAndMesh(ConstraintAndMesh data){
-	if(data.getMesh()!=null){
-		scene.remove(data.getMesh());
+public void destroyConstraintAndLine(ConstraintAndLine data){
+	if(data.getLine()!=null){
+		scene.remove(data.getLine());
 	}
 	autoSyncingConstraints.remove(data);
 	destroyConstraintOnly(data.getConstraint());
@@ -57,7 +62,7 @@ private void destroyRigidBody(btRigidBody body){
 }
 
 
-private List<ConstraintAndMesh> autoSyncingConstraints=Lists.newArrayList();
+private List<ConstraintAndLine> autoSyncingConstraints=Lists.newArrayList();
 private List<BodyAndMesh> autoSyncingBodies=Lists.newArrayList();
 private JsArray<AmmoObject> garbage=JsArray.createArray().cast();
 public void setScene(Scene scene) {
@@ -88,8 +93,10 @@ public void destroyWorld(){
 	for(BodyAndMesh object:autoSyncingBodies){
 		destroyBodyAndMesh(object);
 	}
-	for(ConstraintAndMesh object:autoSyncingConstraints){
-		destroyConstraintAndMesh(object);
+	
+	
+	for(ConstraintAndLine object:autoSyncingConstraints){
+		destroyConstraintAndLine(object);
 	}
 	world.destroy();
 }
@@ -100,8 +107,9 @@ public void update(double dt){
 		object.syncTransform();
 	}
 	
-	for(ConstraintAndMesh object:autoSyncingConstraints){
+	for(ConstraintAndLine object:autoSyncingConstraints){
 		//TODO support sync
+		object.sync();
 	}
 	
 	deleteGarbages();
@@ -123,14 +131,52 @@ public void updateConstraint(btGeneric6DofSpringConstraint newConstraint,Distanc
 }
 
 
-public ConstraintAndMesh createGeneric6DofSpringConstraintConstraint(btRigidBody body1,btRigidBody body2,btTransform frameInA,btTransform frameInB,boolean disableCollisionsBetweenLinkedBodies){
-	btGeneric6DofSpringConstraint constraint= Ammo.btGeneric6DofSpringConstraint(body1, body2, frameInA, frameInB, true);
+public ConstraintAndLine createPoint2PointConstraint(BodyAndMesh body1,Vector3 pivot0Vector){
+	btVector3 pivot0=Ammo.btVector3(pivot0Vector);
+	btPoint2PointConstraint constraint= Ammo.btPoint2PointConstraint(body1.getBody(), pivot0);
+	getWorld().addConstraint(constraint);
+	pivot0.destroy();
+	
+	Geometry geo = THREE.Geometry();//var geo = new THREE.Geometry();
+	geo.getVertices().push( THREE.Vector3(  ));//geo.vertices.push( new THREE.Vector3( pos1[0], pos1[1], pos1[2] ) );
+	geo.getVertices().push( THREE.Vector3(  ));//geo.vertices.push( new THREE.Vector3( pos2[0], pos2[1], pos2[2] ) );
+	
+	LineBasicMaterial material=THREE.LineBasicMaterial(GWTParamUtils.LineBasicMaterial().color(0xaaaaaa));
+	
+	Line joint = THREE.Line( geo,material);
+	scene.add(joint);
+	
+	
+	ConstraintAndLine cm=new ConstraintAndLine(constraint,joint,body1,null);
+	cm.setPivot0(pivot0Vector);
+	
+	autoSyncingConstraints.add(cm);
+	
+	return cm;
+}
+
+public ConstraintAndLine createGeneric6DofSpringConstraintConstraint(BodyAndMesh body1,BodyAndMesh body2,btTransform frameInA,btTransform frameInB,boolean disableCollisionsBetweenLinkedBodies){
+	btGeneric6DofSpringConstraint constraint= Ammo.btGeneric6DofSpringConstraint(body1.getBody(), body2.getBody(), frameInA, frameInB, true);
 	getWorld().addConstraint(constraint, disableCollisionsBetweenLinkedBodies);
 	
-	ConstraintAndMesh cm=new ConstraintAndMesh(constraint, null);
+	
+	Geometry geo = THREE.Geometry();//var geo = new THREE.Geometry();
+	geo.getVertices().push( THREE.Vector3(  ));//geo.vertices.push( new THREE.Vector3( pos1[0], pos1[1], pos1[2] ) );
+	geo.getVertices().push( THREE.Vector3(  ));//geo.vertices.push( new THREE.Vector3( pos2[0], pos2[1], pos2[2] ) );
+	
+	LineBasicMaterial material=THREE.LineBasicMaterial(GWTParamUtils.LineBasicMaterial().color(0xaaaaaa));
+	
+	Line joint = THREE.Line( geo,material);
+	
+	
+	
+	ConstraintAndLine cm=new ConstraintAndLine(constraint,joint,body1,body2);
 	
 	autoSyncingConstraints.add(cm);
 	//TODO make line or something
+	
+	
+	
 	
 	return cm;
 }

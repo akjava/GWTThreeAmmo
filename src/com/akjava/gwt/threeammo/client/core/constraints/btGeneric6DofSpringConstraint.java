@@ -1,4 +1,4 @@
-package com.akjava.gwt.threeammo.client.core;
+package com.akjava.gwt.threeammo.client.core.constraints;
 public class btGeneric6DofSpringConstraint extends btGeneric6DofConstraint{
 protected btGeneric6DofSpringConstraint(){}
 

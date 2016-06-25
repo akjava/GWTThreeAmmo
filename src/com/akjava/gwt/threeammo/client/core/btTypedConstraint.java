@@ -1,5 +1,7 @@
 package com.akjava.gwt.threeammo.client.core;
 
+import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofSpringConstraint;
+
 
 public class btTypedConstraint extends AmmoObject{
 protected btTypedConstraint(){}

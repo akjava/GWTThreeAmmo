@@ -139,6 +139,13 @@ var form = new $wnd.Ammo.btTransform();
     return body;
 }-*/;
 
+public void updateMass(double mass){
+	btVector3 localInertia=Ammo.btVector3(0, 0, 0);
+	getBody().getCollisionShape().calculateLocalInertia(mass, localInertia);
+	getBody().setMassProps(mass, localInertia);
+	getBody().setMass(mass);
+}
+
 //TODO need rotate
 public static final  native btRigidBody makeBoxBody(btVector3 halfSize,double mass,double x,double y,double z)/*-{
 var pos=new $wnd.Ammo.btVector3(x, y, z);
@@ -160,6 +167,8 @@ var form = new $wnd.Ammo.btTransform();
           localInertia 
       )
   );
+  
+  
   //btSphere has nothing special method
   //body._sphereShape=sphere;
   
