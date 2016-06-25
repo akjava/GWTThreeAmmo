@@ -75,13 +75,23 @@ public static BoxBodyAndMesh createBox(Vector3 size,double mass,double x,double 
 	return box;
 }
 
-public void syncPosition(){
+//some sphere no need
+private boolean rotationSync=true;
+public boolean isRotationSync() {
+	return rotationSync;
+}
+public void setRotationSync(boolean rotationSync) {
+	this.rotationSync = rotationSync;
+}
+public void syncTransform(){
 	if(body==null || mesh==null){
 		return;
 	}
 	body.getMotionState().getWorldTransform(transform);
 	mesh.getPosition().set(transform.getOrigin().x(), transform.getOrigin().y(), transform.getOrigin().z());
-	
+	if(rotationSync){
+	mesh.getQuaternion().set(transform.getRotation().x(), transform.getRotation().y(), transform.getRotation().z(), transform.getRotation().w());
+	}
 }
 
 public static final   btRigidBody makeSphereBody(double radius,double mass,Vector3 pos){

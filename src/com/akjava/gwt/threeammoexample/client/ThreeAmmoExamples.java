@@ -1,12 +1,12 @@
 package com.akjava.gwt.threeammoexample.client;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import com.akjava.gwt.lib.client.URLUtils;
 import com.akjava.gwt.three.client.java.ui.example.Example;
 import com.akjava.gwt.three.client.java.ui.example.ExampleOwner;
+import com.akjava.gwt.threeammoexample.client.examples.DampingExample;
 import com.akjava.gwt.threeammoexample.client.examples.FrictionExample;
 import com.akjava.gwt.threeammoexample.client.examples.HelloExample;
 import com.akjava.gwt.threeammoexample.client.examples.RestitutionExample;
@@ -59,29 +59,28 @@ public class ThreeAmmoExamples implements EntryPoint,ExampleOwner {
 		
 		side.add(title);
 		
-		HTML webgl=new HTML("<h4>webgl</h4>");
+		HTML webgl=new HTML("<h4>Basic Example</h4>");
 		webgl.setWidth("100%");
 		side.add(webgl);
 		root.addWest(side, 300);
 		root.add(center);
 		
 		
-		List<AmmoExample> examples=Lists.newArrayList();
+		List<AbstractAmmoExample> examples=Lists.newArrayList();
 		
 		examples.add(new HelloExample());
 		examples.add(new RestitutionExample());
 		examples.add(new FrictionExample());
+		examples.add(new DampingExample());
 		
-		Collections.sort(examples);
+		//Collections.sort(examples);
 		
 		
 		for(Example exp:examples){
 		side.add(new DemoAnchor(this,exp));
 		}
 		
-		Label links=new Label("Links");
-		links.setStylePrimaryName("subheader");
-		side.add(links);
+		side.add(new HTML("<h4>Links</h4>"));
 		side.add(new Anchor("Three.js(github)", "https://github.com/mrdoob/three.js/"));
 		side.add(new Anchor("Ammo.js(github)", "https://github.com/kripken/ammo.js/"));
 		side.add(new Anchor("GWT-Three.js(github)", "https://github.com/akjava/gwt-three.js-test"));

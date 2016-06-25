@@ -15,25 +15,26 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 
-public class FrictionExample extends AbstractAmmoExample{
+public class DampingExample extends AbstractAmmoExample{
 
 	@Override
 	public String getName() {
-		return "Friction";
+		return "Damping";
 	}
 
 	@Override
 	public String getTokenKey() {
-		return "friction";
+		return "damping";
 	}
 	
-	private double groundRestitution=0;
-	private double sphereRestitution=0;
+	private double groundRestitution=0.5;
+	private double sphereRestitution=0.5;
 	
 	private double groundFriction=0.1;
 	private double sphereFriction=0.1;
 	private BodyAndMesh ball;
-	
+	private double linearDamping=0.5;
+	private double angularDamping=0.5;
 	
 /**
  * 
@@ -56,6 +57,35 @@ public class FrictionExample extends AbstractAmmoExample{
 		
 		
 		
+		controlerRootPanel.add(new HTML("<h4>Damping</h4>"));
+		
+		LabeledInputRangeWidget2 linearDampingEditor=new LabeledInputRangeWidget2("Linear", 0, 1, .01);
+		linearDampingEditor.addtRangeListener(new ValueChangeHandler<Number>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Number> event) {
+				linearDamping=event.getValue().doubleValue();
+				
+				resetProperties();
+				
+				
+			}
+		});
+		linearDampingEditor.setValue(linearDamping);
+		controlerRootPanel.add(linearDampingEditor);
+		
+		LabeledInputRangeWidget2 angularDampingEditor=new LabeledInputRangeWidget2("Angular", 0, 1, .01);
+		angularDampingEditor.addtRangeListener(new ValueChangeHandler<Number>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Number> event) {
+				angularDamping=event.getValue().doubleValue();
+				resetProperties();
+				
+				
+			}
+		});
+		angularDampingEditor.setValue(angularDamping);
+		controlerRootPanel.add(angularDampingEditor);
+		
 		//sphere.getBody().setDamping(.1, .1);
 		
 		controlerRootPanel.add(new HTML("<h4>Ball Shape</h4>"));
@@ -74,7 +104,7 @@ public class FrictionExample extends AbstractAmmoExample{
 		});
 		
 		
-		controlerRootPanel.add(new Label("on big-friction(over 56) some of ball  can't be stopped"));
+		controlerRootPanel.add(new Label("bigfriction make jump.over 56 ,most of them can't stop"));
 		LabeledInputRangeWidget2 forceEditor=new LabeledInputRangeWidget2("Force", 1, 100, 1);
 		forceEditor.addtRangeListener(new ValueChangeHandler<Number>() {
 			@Override
@@ -89,12 +119,11 @@ public class FrictionExample extends AbstractAmmoExample{
 		
 		
 		controlerRootPanel.add(new HTML("<h4>Restitution</h4>"));
-		controlerRootPanel.add(new Label("no need to modify on this case."));
+		controlerRootPanel.add(new Label("either 0 means no bumping"));
 		LabeledInputRangeWidget2 sphereRestitutionEditor=new LabeledInputRangeWidget2("Sphere", 0, 2, 0.1);
 		sphereRestitutionEditor.addtRangeListener(new ValueChangeHandler<Number>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Number> event) {
-				
 				sphereRestitution=event.getValue().doubleValue();
 				resetProperties();
 			}
@@ -146,7 +175,9 @@ public class FrictionExample extends AbstractAmmoExample{
 		resetProperties();
 	}
 	
-	
+	/*
+	 * i have no idea how to clear all force,so make each time.
+	 */
 	protected void newBall() {
 		boolean isBox=boxCheck.getValue();
 		if(ball!=null){
@@ -157,19 +188,17 @@ public class FrictionExample extends AbstractAmmoExample{
 		}else{
 			ball=createSphere();
 		}
-		
 }
-
 
 	double zForce=10,xForce;
 	private CheckBox boxCheck;
-	
 	public void resetProperties(){
 		ball.getBody().setFriction(sphereFriction);
 		ball.getBody().setRestitution(sphereRestitution);
 		
-		ball.getBody().setPosition(0, 1, -79);
+		ball.getBody().setPosition(0, 10, -79);
 		
+		ball.getBody().setDamping(linearDamping, angularDamping);
 		ball.getBody().setAngularVelocity(THREE.Vector3());//this working
 		ball.getBody().setLinearVelocity(THREE.Vector3(xForce, 0, zForce));
 	}

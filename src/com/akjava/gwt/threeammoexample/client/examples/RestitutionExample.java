@@ -6,13 +6,13 @@ import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.threeammo.client.BoxBodyAndMesh;
 import com.akjava.gwt.threeammo.client.SphereBodyAndMesh;
 import com.akjava.gwt.threeammo.client.core.Ammo;
-import com.akjava.gwt.threeammoexample.client.AmmoExample;
+import com.akjava.gwt.threeammoexample.client.AbstractAmmoExample;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 
-public class RestitutionExample extends AmmoExample{
+public class RestitutionExample extends AbstractAmmoExample{
 
 	@Override
 	public String getName() {

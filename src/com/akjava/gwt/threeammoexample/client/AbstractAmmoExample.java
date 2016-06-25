@@ -19,7 +19,7 @@ import com.akjava.gwt.threeammo.client.core.Ammo;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public abstract class AmmoExample extends AbstractExample{
+public abstract class AbstractAmmoExample extends AbstractExample{
 
 
 

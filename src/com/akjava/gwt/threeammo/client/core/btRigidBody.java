@@ -141,8 +141,8 @@ public final  native void setRestitution(double restitution)/*-{
 this.setRestitution(restitution);
 }-*/;
 
-public final  native void setDamping(double lin_damping,double ang_damping)/*-{
-this.setDamping(lin_damping,ang_damping);
+public final  native void setDamping(double linearDamping,double angularDamping)/*-{
+this.setDamping(linearDamping,angularDamping);
 }-*/;
 
 

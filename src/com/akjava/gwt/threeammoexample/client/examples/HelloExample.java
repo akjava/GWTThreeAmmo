@@ -4,9 +4,9 @@ import com.akjava.gwt.three.client.gwt.GWTParamUtils;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.threeammo.client.BoxBodyAndMesh;
 import com.akjava.gwt.threeammo.client.SphereBodyAndMesh;
-import com.akjava.gwt.threeammoexample.client.AmmoExample;
+import com.akjava.gwt.threeammoexample.client.AbstractAmmoExample;
 
-public class HelloExample extends AmmoExample{
+public class HelloExample extends AbstractAmmoExample{
 
 	@Override
 	public String getName() {

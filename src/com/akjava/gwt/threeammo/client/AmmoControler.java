@@ -97,7 +97,7 @@ public void destroyWorld(){
 public void update(double dt){
 	world.stepSimulation(dt, 0);
 	for(BodyAndMesh object:autoSyncingBodies){
-		object.syncPosition();
+		object.syncTransform();
 	}
 	
 	for(ConstraintAndMesh object:autoSyncingConstraints){
