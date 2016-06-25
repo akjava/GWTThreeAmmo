@@ -15,16 +15,16 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 
-public class DampingExample extends AbstractAmmoExample{
+public class MassExample extends AbstractAmmoExample{
 
 	@Override
 	public String getName() {
-		return "Damping";
+		return "Mass";
 	}
 
 	@Override
 	public String getTokenKey() {
-		return "damping";
+		return "mass";
 	}
 	
 	private double groundRestitution=0.5;
@@ -33,8 +33,11 @@ public class DampingExample extends AbstractAmmoExample{
 	private double groundFriction=0.1;
 	private double sphereFriction=0.1;
 	private BodyAndMesh ball;
-	private double linearDamping=0.5;
-	private double angularDamping=0.5;
+	private double mass=1;
+	
+
+	private double linearDamping=0.1;
+	private double angularDamping=0.1;
 	
 /**
  * 
@@ -57,6 +60,24 @@ public class DampingExample extends AbstractAmmoExample{
 		
 		
 		
+		controlerRootPanel.add(new HTML("<h4>Mass</h4>"));
+		controlerRootPanel.add(new Label("no idea.how effect"));
+		LabeledInputRangeWidget2 massEditor=new LabeledInputRangeWidget2("mass", .1, 100, .1);
+		massEditor.addtRangeListener(new ValueChangeHandler<Number>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Number> event) {
+				mass=event.getValue().doubleValue();
+				newBall();
+				resetProperties();
+				
+				
+			}
+		});
+		massEditor.setValue(mass);
+		controlerRootPanel.add(massEditor);
+		
+		
+
 		controlerRootPanel.add(new HTML("<h4>Damping</h4>"));
 		
 		LabeledInputRangeWidget2 linearDampingEditor=new LabeledInputRangeWidget2("Linear", 0, 1, .01);
@@ -196,15 +217,14 @@ public class DampingExample extends AbstractAmmoExample{
 		ball.getBody().setFriction(sphereFriction);
 		ball.getBody().setRestitution(sphereRestitution);
 		
-		ball.getBody().setPosition(0, 10, -79);
-		
+		ball.getBody().setPosition(0, 1, -79);
 		ball.getBody().setDamping(linearDamping, angularDamping);
 		ball.getBody().setAngularVelocity(THREE.Vector3());//this working
 		ball.getBody().setLinearVelocity(THREE.Vector3(xForce, 0, zForce));
 	}
 
 	public BodyAndMesh createSphere(){
-		 BodyAndMesh bm=ammoControler.createSphere(1, 1, 0, 0, 0, 
+		 BodyAndMesh bm=ammoControler.createSphere(1, mass, 0, 0, 0, 
 					THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().color(0x880000))
 							);
 		 
@@ -217,11 +237,10 @@ public class DampingExample extends AbstractAmmoExample{
 		return bm;
 	}
 	public BodyAndMesh createBox(){
-		 BodyAndMesh bm=ammoControler.createBox(THREE.Vector3(2, 2, 2), 1, 0, 0, 0, 
+		 BodyAndMesh bm=ammoControler.createBox(THREE.Vector3(2, 2, 2), mass, 0, 0, 0, 
 					THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().color(0x880000))
 							);
 		 
-		 LogUtils.log(bm.getBody());
 		 
 		 bm.getBody().setActivationState(Ammo.DISABLE_DEACTIVATION);
 			btVector3 all=Ammo.btVector3(1, 1, 1);

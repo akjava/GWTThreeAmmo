@@ -185,7 +185,6 @@ public class FrictionExample extends AbstractAmmoExample{
 			bm.getBody().setAngularFactor(all);
 			all.destroy();
 			
-			bm.getBody().setRestitution(sphereRestitution);
 		return bm;
 	}
 	public BodyAndMesh createBox(){
@@ -193,15 +192,13 @@ public class FrictionExample extends AbstractAmmoExample{
 					THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().color(0x880000))
 							);
 		 
-		 LogUtils.log(bm.getBody());
-		 
 		 bm.getBody().setActivationState(Ammo.DISABLE_DEACTIVATION);
 			btVector3 all=Ammo.btVector3(1, 1, 1);
 			bm.getBody().setLinearFactor(all);
 			bm.getBody().setAngularFactor(all);
 			all.destroy();
 			
-			bm.getBody().setRestitution(sphereRestitution);
+			
 		return bm;
 	}
 }

@@ -9,6 +9,7 @@ import com.akjava.gwt.three.client.java.ui.example.ExampleOwner;
 import com.akjava.gwt.threeammoexample.client.examples.DampingExample;
 import com.akjava.gwt.threeammoexample.client.examples.FrictionExample;
 import com.akjava.gwt.threeammoexample.client.examples.HelloExample;
+import com.akjava.gwt.threeammoexample.client.examples.MassExample;
 import com.akjava.gwt.threeammoexample.client.examples.RestitutionExample;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.EntryPoint;
@@ -72,7 +73,7 @@ public class ThreeAmmoExamples implements EntryPoint,ExampleOwner {
 		examples.add(new RestitutionExample());
 		examples.add(new FrictionExample());
 		examples.add(new DampingExample());
-		
+		examples.add(new MassExample());
 		//Collections.sort(examples);
 		
 		

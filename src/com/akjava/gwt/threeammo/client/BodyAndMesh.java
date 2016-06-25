@@ -151,6 +151,7 @@ var form = new $wnd.Ammo.btTransform();
   if(mass!=0){
   	box.calculateLocalInertia(mass,localInertia);
   }
+  
   var body= new $wnd.Ammo.btRigidBody(
       new $wnd.Ammo.btRigidBodyConstructionInfo(
           mass, 
