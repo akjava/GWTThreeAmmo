@@ -16,6 +16,11 @@ this.stepSimulation(timeStep,maxSubSteps);
 public final  native void addRigidBody(btRigidBody body)/*-{
 this.addRigidBody(body);
 }-*/;
+
+public final  native void addRigidBody(btRigidBody body,int type,int colliedWith)/*-{
+this.addRigidBody(body,type,colliedWith);
+}-*/;
+
 public final  native void removeRigidBody(btRigidBody body)/*-{
 this.removeRigidBody(body);
 }-*/;

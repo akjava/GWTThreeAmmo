@@ -1,6 +1,5 @@
 package com.akjava.gwt.threeammoexample.client;
 
-import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.stats.client.Stats;
 import com.akjava.gwt.three.client.examples.js.THREEExp;
 import com.akjava.gwt.three.client.examples.js.controls.TrackballControls;
@@ -13,8 +12,6 @@ import com.akjava.gwt.three.client.js.lights.Light;
 import com.akjava.gwt.three.client.js.renderers.WebGLRenderer;
 import com.akjava.gwt.three.client.js.scenes.Scene;
 import com.akjava.gwt.threeammo.client.AmmoControler;
-import com.akjava.gwt.threeammo.client.BoxBodyAndMesh;
-import com.akjava.gwt.threeammo.client.SphereBodyAndMesh;
 import com.akjava.gwt.threeammo.client.core.Ammo;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;

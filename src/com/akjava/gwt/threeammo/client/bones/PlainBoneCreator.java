@@ -8,9 +8,8 @@ import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Bone;
 import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
-import com.akjava.gwt.threeammo.client.BodyAndMesh;
 import com.akjava.gwt.threeammo.client.AmmoControler;
-import com.akjava.gwt.threeammo.client.functions.BodyAndMeshFunctions;
+import com.akjava.gwt.threeammo.client.BodyAndMesh;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 

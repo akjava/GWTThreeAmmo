@@ -11,7 +11,16 @@ import com.akjava.gwt.threeammo.client.core.btVector3;
 
 public class BodyAndMesh extends AmmoAndThreeContainer{
 
+public static final int TYPE_SPHERE=0;
+public static final int TYPE_BOX=1;
 
+private int shapeType;
+public int getShapeType() {
+	return shapeType;
+}
+public void setShapeType(int shapeType) {
+	this.shapeType = shapeType;
+}
 
 private btRigidBody body;
 public BodyAndMesh(btRigidBody body, Mesh mesh) {
@@ -48,6 +57,7 @@ public void copy(BodyAndMesh newBm){
 
 public static SphereBodyAndMesh createSphere(double radius,double mass,Vector3 position,Material material){
 	return createSphere(radius, mass, position.getX(), position.getY(), position.getZ(), material);
+	
 }
 
 public static SphereBodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
@@ -56,6 +66,8 @@ public static SphereBodyAndMesh createSphere(double radius,double mass,double x,
 	Mesh mesh=THREE.Mesh(THREE.SphereGeometry(radius, 10, 10),material);
 	mesh.setPosition(x, y, z);
 	SphereBodyAndMesh sphere= new SphereBodyAndMesh(radius,body, mesh);
+	sphere.setShapeType(TYPE_SPHERE);
+	
 	return sphere;
 }
 
@@ -72,7 +84,16 @@ public static BoxBodyAndMesh createBox(Vector3 size,double mass,double x,double 
 	Mesh mesh=THREE.Mesh(THREE.BoxGeometry(size.getX(), size.getY(), size.getZ()),material);
 	mesh.setPosition(x, y, z);
 	BoxBodyAndMesh box= new BoxBodyAndMesh(size.clone(),body, mesh);
+	box.setShapeType(TYPE_BOX);
+	
 	return box;
+}
+
+public SphereBodyAndMesh castToSphere(){
+	return (SphereBodyAndMesh)this;
+}
+public BoxBodyAndMesh castToBox(){
+	return (BoxBodyAndMesh)this;
 }
 
 //some sphere no need
@@ -83,12 +104,25 @@ public boolean isRotationSync() {
 public void setRotationSync(boolean rotationSync) {
 	this.rotationSync = rotationSync;
 }
+
+private double ammoMultipleScalar=1;
+public double getAmmoMultipleScalar() {
+	return ammoMultipleScalar;
+}
+/*
+ * this must be conflict localScale
+ */
+public void setAmmoMultipleScalar(double ammoMultipleScalar) {
+	this.ammoMultipleScalar = ammoMultipleScalar;
+	getMesh().getScale().setScalar(1.0/ammoMultipleScalar);
+}
 public void syncTransform(){
 	if(body==null || mesh==null){
 		return;
 	}
+	
 	body.getMotionState().getWorldTransform(transform);
-	mesh.getPosition().set(transform.getOrigin().x(), transform.getOrigin().y(), transform.getOrigin().z());
+	mesh.getPosition().set(transform.getOrigin().x()/ammoMultipleScalar, transform.getOrigin().y()/ammoMultipleScalar, transform.getOrigin().z()/ammoMultipleScalar);
 	if(rotationSync){
 	mesh.getQuaternion().set(transform.getRotation().x(), transform.getRotation().y(), transform.getRotation().z(), transform.getRotation().w());
 	}

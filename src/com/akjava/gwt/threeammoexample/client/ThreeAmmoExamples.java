@@ -12,6 +12,7 @@ import com.akjava.gwt.threeammoexample.client.examples.HelloExample;
 import com.akjava.gwt.threeammoexample.client.examples.MassExample;
 import com.akjava.gwt.threeammoexample.client.examples.RestitutionExample;
 import com.akjava.gwt.threeammoexample.client.examples.constraints.Point2PointAndGenericExample;
+import com.akjava.gwt.threeammoexample.client.examples.constraints.Point2PointAndGenericExample2;
 import com.akjava.gwt.threeammoexample.client.examples.constraints.Point2PointExample;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.EntryPoint;
@@ -79,6 +80,7 @@ public class ThreeAmmoExamples implements EntryPoint,ExampleOwner {
 		//Collections.sort(examples);
 		examples.add(new Point2PointExample());
 		examples.add(new Point2PointAndGenericExample());
+		examples.add(new Point2PointAndGenericExample2());
 		
 		for(Example exp:examples){
 		side.add(new DemoAnchor(this,exp));

@@ -5,7 +5,6 @@ import java.util.List;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.threeammo.client.core.btTransform;
-import com.akjava.gwt.threeammo.client.core.btTypedConstraint;
 import com.google.common.collect.Lists;
 
 

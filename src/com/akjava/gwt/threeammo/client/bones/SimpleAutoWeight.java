@@ -6,14 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.akjava.gwt.lib.client.JavaScriptUtils;
-import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.boneanimation.AnimationBone;
 import com.akjava.gwt.three.client.java.ThreeLog;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.core.Geometry;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.math.Vector4;
-import com.akjava.gwt.three.client.js.objects.Bone;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.JsArray;

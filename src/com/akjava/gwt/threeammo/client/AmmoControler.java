@@ -223,6 +223,17 @@ public void addBodyMesh(BodyAndMesh object){
 	autoSyncingBodies.add(object);
 }
 
+public void addBodyMesh(BodyAndMesh object,int type,int colliedWith){
+	if( object.getMesh()!=null){
+	   scene.add( object.getMesh());
+	}
+	if(object.getBody()!=null){
+		world.addRigidBody(object.getBody(),type,colliedWith);
+	}
+	
+	autoSyncingBodies.add(object);
+}
+
 public SphereBodyAndMesh createSphere(double radius,double mass,double x,double y,double z,Material material){
 	SphereBodyAndMesh object=  BodyAndMesh.createSphere(radius, mass, x, y, z, material);
 	addBodyMesh(object);
@@ -344,6 +355,8 @@ public void updateBone(Bone bone,Vector3 position,Quaternion rotation){
 /*
  * delete and recreate totally costly function,it's better to use only for static 
  *
+ * watch out!
+ * this is not effect any properties
  * 
  */
 public void setRadiusWithRecreate(double radius,BodyAndMesh bm){

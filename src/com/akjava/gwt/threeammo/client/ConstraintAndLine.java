@@ -1,13 +1,8 @@
 package com.akjava.gwt.threeammo.client;
 
-import com.akjava.gwt.lib.client.LogUtils;
-import com.akjava.gwt.three.client.java.ThreeLog;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Line;
 import com.akjava.gwt.threeammo.client.core.btTypedConstraint;
-import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofConstraint;
-import com.akjava.gwt.threeammo.client.core.constraints.btGeneric6DofSpringConstraint;
-import com.akjava.gwt.threeammo.client.core.constraints.btPoint2PointConstraint;
 
 public class ConstraintAndLine extends AmmoAndThreeContainer{
 	private BodyAndMesh body1,body2;

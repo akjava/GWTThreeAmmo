@@ -1,6 +1,5 @@
 package com.akjava.gwt.threeammoexample.client.examples;
 
-import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.GWTParamUtils;
 import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
 import com.akjava.gwt.three.client.js.THREE;
