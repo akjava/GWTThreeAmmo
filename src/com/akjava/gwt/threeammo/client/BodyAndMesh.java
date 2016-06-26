@@ -1,7 +1,12 @@
 package com.akjava.gwt.threeammo.client;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.three.client.java.ThreeLog;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.materials.Material;
+import com.akjava.gwt.three.client.js.math.Quaternion;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.gwt.threeammo.client.core.Ammo;
@@ -66,7 +71,7 @@ public static SphereBodyAndMesh createSphere(double radius,double mass,double x,
 	Mesh mesh=THREE.Mesh(THREE.SphereGeometry(radius, 10, 10),material);
 	mesh.setPosition(x, y, z);
 	SphereBodyAndMesh sphere= new SphereBodyAndMesh(radius,body, mesh);
-	sphere.setShapeType(TYPE_SPHERE);
+	
 	
 	return sphere;
 }
@@ -84,20 +89,24 @@ public static BoxBodyAndMesh createBox(Vector3 size,double mass,double x,double 
 	Mesh mesh=THREE.Mesh(THREE.BoxGeometry(size.getX(), size.getY(), size.getZ()),material);
 	mesh.setPosition(x, y, z);
 	BoxBodyAndMesh box= new BoxBodyAndMesh(size.clone(),body, mesh);
-	box.setShapeType(TYPE_BOX);
+	
 	
 	return box;
 }
 
 public SphereBodyAndMesh castToSphere(){
+	checkArgument(shapeType==TYPE_SPHERE,"this shape type is "+shapeType+".this is not sphere-shape.you invalidly to cast.it would make Uncaught java.lang.ClassCastException");
+	
 	return (SphereBodyAndMesh)this;
 }
 public BoxBodyAndMesh castToBox(){
+	checkArgument(shapeType==TYPE_BOX,"this shape type is "+shapeType+".this is not sphere-shape.you invalidly to cast.it would make Uncaught java.lang.ClassCastException");
+	
 	return (BoxBodyAndMesh)this;
 }
 
 //some sphere no need
-private boolean rotationSync=true;
+private boolean rotationSync;
 public boolean isRotationSync() {
 	return rotationSync;
 }
@@ -124,6 +133,8 @@ public void syncTransform(){
 	body.getMotionState().getWorldTransform(transform);
 	mesh.getPosition().set(transform.getOrigin().x()/ammoMultipleScalar, transform.getOrigin().y()/ammoMultipleScalar, transform.getOrigin().z()/ammoMultipleScalar);
 	if(rotationSync){
+		Quaternion q=THREE.Quaternion();
+		transform.getRotation().copyTo(q);
 	mesh.getQuaternion().set(transform.getRotation().x(), transform.getRotation().y(), transform.getRotation().z(), transform.getRotation().w());
 	}
 }

@@ -1,6 +1,8 @@
 package com.akjava.gwt.threeammo.client.core;
 
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.js.THREE;
+import com.akjava.gwt.three.client.js.math.Quaternion;
 import com.akjava.gwt.three.client.js.math.Vector3;
 
 
@@ -53,12 +55,36 @@ public final void setPosition(double x,double y,double z){
 		setTransform(transform);
 		getDestroyWiths().push(transform);
 	}
+	this.getMotionState().getWorldTransform(transform);//need rotation
 	transform.getOrigin().set(x,y,z);
 	
 	this.setCenterOfMassTransform(transform);
 	this.getMotionState().setWorldTransform(transform);
 }
+public final void setRotation(Quaternion quaternion){
+	setRotation(quaternion.getX(),quaternion.getY(),quaternion.getZ(),quaternion.getW());
+}
+public final void setRotation(double x,double y,double z,double w){
+	btTransform transform=getTransform();
+	if(transform==null){
+		transform=Ammo.btTransformWithIdentity();
+		setTransform(transform);
+		getDestroyWiths().push(transform);
+	}
+	
+	btQuaternion q=Ammo.btQuaternion();
+	//TODO share object
+	q.set(x, y, z, w);
+	transform.setRotation(q);
+	q.destroy();
+	
+	this.setCenterOfMassTransform(transform);
+	this.getMotionState().setWorldTransform(transform);
+}
 
+public static String log(btQuaternion q){
+	return  q.x()+","+q.y()+","+q.w()+","+q.z();
+}
 
 
 private final  native btTransform getTransform()/*-{

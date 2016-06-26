@@ -8,6 +8,8 @@ public class BoxBodyAndMesh extends BodyAndMesh{
 public BoxBodyAndMesh(Vector3 halfBoxSize,btRigidBody body, Mesh mesh) {
 		super(body, mesh);
 		this.boxSize=halfBoxSize;
+		setShapeType(TYPE_BOX);
+		setRotationSync(true);
 	}
 
 /*
