@@ -317,7 +317,7 @@ public class PointsToGeometry {
 			Vector2	uvb = getUv(slices+1,0);
 			Vector2	uvc = getUv(slices+1,0);
 			Vector2	uvd = getUv(slices+1,0);
-			LogUtils.log("top:"+primaryFirstTop+","+primaryLastTop+","+secondaryFirstTop+","+secondaryLastTop);
+			//LogUtils.log("top:"+primaryFirstTop+","+primaryLastTop+","+secondaryFirstTop+","+secondaryLastTop);
 			
 			//set first
 			uva.setY(vBase+tickUv);
@@ -330,7 +330,7 @@ public class PointsToGeometry {
 			
 			geometry.getFaces().push( THREE.Face3( secondaryFirstTop ,secondaryLastTop,primaryLastTop) );
 			pushUv(uvs, uvb.clone(), uvc, uvd.clone());	
-			LogUtils.log("bottom:"+primaryFirstBottom+","+primaryLastBottom+","+secondaryFirstBottom+","+secondaryLastBottom);
+			//LogUtils.log("bottom:"+primaryFirstBottom+","+primaryLastBottom+","+secondaryFirstBottom+","+secondaryLastBottom);
 			
 			//set bottom
 			uva.setY(vBase);
