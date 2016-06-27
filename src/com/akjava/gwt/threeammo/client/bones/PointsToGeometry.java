@@ -100,11 +100,11 @@ public class PointsToGeometry {
 			
 			
 
-				geometry.getFaces().push( THREE.Face3( a, b, d ) );
-				pushUv(uvs,uva, uvb, uvd  );
+				geometry.getFaces().push( THREE.Face3( d, b, a ) );
+				pushUv(uvs,uvd, uvb, uva  );
 
-				geometry.getFaces().push(THREE.Face3( b, c, d ) );
-				pushUv(uvs, uvb.clone(), uvc, uvd.clone() );
+				geometry.getFaces().push(THREE.Face3( d, c, b ) );
+				pushUv(uvs,uvd.clone() , uvc, uvb.clone() );
 
 			}
 
@@ -177,11 +177,11 @@ public class PointsToGeometry {
 			Vector2	uvd = getUv((int)j,(int)i+1);
 			
 			
-			geometry.getFaces().push( THREE.Face3( a, b, d ) );
-			pushUv(uvs,uva, uvb, uvd ) ;
+			geometry.getFaces().push( THREE.Face3( d, b, a ) );
+			pushUv(uvs,uvd, uvb, uva ) ;
 
-			geometry.getFaces().push(THREE.Face3( b, c, d ) );
-			pushUv(uvs, uvb.clone(), uvc, uvd.clone()  );
+			geometry.getFaces().push(THREE.Face3( d, c, b ) );
+			pushUv(uvs, uvd.clone(), uvc,uvb.clone()   );
 			
 			}
 		}
@@ -268,11 +268,11 @@ public class PointsToGeometry {
 			Vector2	uvc = getUv(slices+1,(int)i+1);
 			Vector2	uvd = getUv(slices,(int)i+1);
 			
-			geometry.getFaces().push( THREE.Face3( a, b, d ) );
-			pushUv(uvs, uva, uvb, uvd );
+			geometry.getFaces().push( THREE.Face3( d, b, a) );
+			pushUv(uvs, uvd, uvb,uva  );
 
-			geometry.getFaces().push(THREE.Face3( b, c, d ) );
-			pushUv(uvs, uvb.clone(), uvc, uvd.clone());	
+			geometry.getFaces().push(THREE.Face3( d, c, b ) );
+			pushUv(uvs, uvd.clone(), uvc,uvb.clone() );	
 			
 			if(i==0){
 				primaryFirstTop=a;
@@ -296,11 +296,11 @@ public class PointsToGeometry {
 			Vector2	uvc = getUv(slices+1,(int)i+1);
 			Vector2	uvd = getUv(slices,(int)i+1);
 			
-			geometry.getFaces().push( THREE.Face3( a, b, d ) );
-			pushUv(uvs, uva, uvb, uvd );
+			geometry.getFaces().push( THREE.Face3( d, b, a ) );
+			pushUv(uvs, uvd, uvb, uva );
 
-			geometry.getFaces().push(THREE.Face3( b, c, d ) );
-			pushUv(uvs, uvb.clone(), uvc, uvd.clone());	
+			geometry.getFaces().push(THREE.Face3( d, c, b ) );
+			pushUv(uvs, uvd.clone(), uvc,uvb.clone() );	
 			if(i==0){
 				secondaryFirstTop=a;
 				secondaryLastTop=d;
