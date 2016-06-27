@@ -246,6 +246,15 @@ public class PointsToGeometry {
 		}
 		
 		if(connectHorizontal){
+			int primaryFirstTop=0;
+			int primaryLastTop=0;
+			int secondaryFirstTop=0;
+			int secondaryLastTop=0;
+			
+		int primaryFirstBottom=0;
+		int primaryLastBottom=0;
+		int secondaryFirstBottom=0;
+		int secondaryLastBottom=0;
 		for ( double i = 0; i < stacks; i ++ ) {
 			int j=0;
 			int j2=slices;
@@ -264,6 +273,15 @@ public class PointsToGeometry {
 
 			geometry.getFaces().push(THREE.Face3( b, c, d ) );
 			pushUv(uvs, uvb.clone(), uvc, uvd.clone());	
+			
+			if(i==0){
+				primaryFirstTop=a;
+				primaryLastTop=d;
+			}
+			else if(i==stacks-1){
+				primaryFirstBottom=b;
+				primaryLastBottom=c;
+			}
 		}
 		for ( double i = 0; i < stacks; i ++ ) {
 			int j=0;
@@ -283,8 +301,108 @@ public class PointsToGeometry {
 
 			geometry.getFaces().push(THREE.Face3( b, c, d ) );
 			pushUv(uvs, uvb.clone(), uvc, uvd.clone());	
+			if(i==0){
+				secondaryFirstTop=a;
+				secondaryLastTop=d;
+			}
+			else 
+			if(i==stacks-1){
+				secondaryFirstBottom=b;
+				secondaryLastBottom=c;
+			}
+		}
+		if(thick!=0){
+			//add bottom
+			Vector2	uva = getUv(slices+1,0);
+			Vector2	uvb = getUv(slices+1,0);
+			Vector2	uvc = getUv(slices+1,0);
+			Vector2	uvd = getUv(slices+1,0);
+			LogUtils.log("top:"+primaryFirstTop+","+primaryLastTop+","+secondaryFirstTop+","+secondaryLastTop);
+			
+			//set first
+			uva.setY(vBase+tickUv);
+			uvb.setY(vBase+tickUv);
+			uvc.setY(1);
+			uvd.setY(1);
+			
+			geometry.getFaces().push( THREE.Face3(primaryFirstTop, secondaryFirstTop,primaryLastTop  ) );
+			pushUv(uvs, uva, uvb, uvd );
+			
+			geometry.getFaces().push( THREE.Face3( secondaryFirstTop ,secondaryLastTop,primaryLastTop) );
+			pushUv(uvs, uvb.clone(), uvc, uvd.clone());	
+			LogUtils.log("bottom:"+primaryFirstBottom+","+primaryLastBottom+","+secondaryFirstBottom+","+secondaryLastBottom);
+			
+			//set bottom
+			uva.setY(vBase);
+			uvb.setY(vBase);
+			uvc.setY(vBase+tickUv);
+			uvd.setY(vBase+tickUv);
+			
+			geometry.getFaces().push( THREE.Face3( primaryFirstBottom, primaryLastBottom, secondaryLastBottom ) );
+			pushUv(uvs, uva, uvb, uvd );
+			
+			geometry.getFaces().push( THREE.Face3( secondaryLastBottom , secondaryFirstBottom, primaryFirstBottom) );
+			pushUv(uvs, uvb.clone(), uvc, uvd.clone());	
 		}
 		
+		/*
+		if(thick!=0){
+			
+			for ( double j = slices; j <= slices; j ++ ) {
+				int i=0;
+				int	a = (int)(i * sliceCount + j);
+				int	b = (int)(i * sliceCount + j +1);
+				int	c = (int)(i * sliceCount + j+1)+frontGeometrySize;
+				int	d = (int)(i * sliceCount + j)+frontGeometrySize;
+				
+				//TODO modify uv
+				Vector2	uva = getUv((int)j,(int)i);
+				Vector2	uvb = getUv((int)j+1,(int)i);
+				Vector2	uvc = getUv((int)j+1,(int)i);
+				Vector2	uvd = getUv((int)j,(int)i);
+				
+				uva.setY(vBase+tickUv);
+				uvb.setY(vBase+tickUv);
+				uvc.setY(1);
+				uvd.setY(1);
+				
+				
+				geometry.getFaces().push( THREE.Face3( a, b, d ) );
+				pushUv(uvs, uva, uvb, uvd );
+
+				geometry.getFaces().push(THREE.Face3( b, c, d ) );
+				pushUv(uvs, uvb.clone(), uvc, uvd.clone());
+				
+			}
+			
+			//bottom
+			
+			for ( double j = slices; j <= slices; j ++ ) {
+				int i=stacks;
+				int	a = (int)(i * sliceCount + j);
+				int	b = (int)(i * sliceCount + j +1);
+				int	c = (int)(i * sliceCount + j+1)+frontGeometrySize;
+				int	d = (int)(i * sliceCount + j)+frontGeometrySize;
+				
+				Vector2	uva = getUv((int)j,(int)i);
+				Vector2	uvb = getUv((int)j+1,(int)i);
+				Vector2	uvc = getUv((int)j+1,(int)i);
+				Vector2	uvd = getUv((int)j,(int)i);
+				
+				uva.setY(vBase);
+				uvb.setY(vBase);
+				uvc.setY(vBase+tickUv);
+				uvd.setY(vBase+tickUv);
+				
+				geometry.getFaces().push( THREE.Face3( d, b, a ) );
+				pushUv(uvs, uvd, uvb, uva );
+
+				geometry.getFaces().push(THREE.Face3( d, c, b ) );
+				pushUv(uvs, uvd.clone(), uvc, uvb.clone());
+				
+			}
+			}
+			*/
 		
 		}else{//create side
 			if(thick!=0){

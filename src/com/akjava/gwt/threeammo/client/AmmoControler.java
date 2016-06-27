@@ -262,6 +262,9 @@ public BoxBodyAndMesh createBox(Vector3 size,double mass,double x,double y,doubl
 public btVector3 makeVector3(Vector3 vector){
 	return makeVector3(vector.getX(), vector.getY(), vector.getZ());
 }
+public btVector3 makeVector3(){
+	return makeVector3(0, 0, 0);
+}
 public btVector3 makeVector3(double x,double y,double z){
 	btVector3 v3=Ammo.btVector3(x, y, z);
 	garbage.push(v3);

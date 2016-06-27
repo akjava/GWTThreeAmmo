@@ -31,10 +31,16 @@ public final  native void setMass(double  param)/*-{
 this._mass=param;
 }-*/;
 
+public final  native void applyForce(btVector3 force)/*-{
+this.applyForce(force);
+}-*/;
 /*
  * for static object
  */
 public final Vector3 getReadOnlyPosition(){
+	return getReadOnlyPosition(THREE.Vector3());
+}
+public final Vector3 getReadOnlyPosition(Vector3 container){
 	btTransform transform=getTransform();
 	if(transform==null){
 		transform=Ammo.btTransformWithIdentity();
@@ -42,7 +48,7 @@ public final Vector3 getReadOnlyPosition(){
 		getDestroyWiths().push(transform);
 	}
 	this.getMotionState().getWorldTransform(transform);
-	return transform.getOrigin().copyTo(THREE.Vector3());
+	return transform.getOrigin().copyTo(container);
 }
 
 public final void setPosition(Vector3 position){
