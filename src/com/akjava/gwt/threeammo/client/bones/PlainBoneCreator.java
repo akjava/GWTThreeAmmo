@@ -21,6 +21,8 @@ public class PlainBoneCreator {
 	 * 
 	 * @param positions list must created loop for(y){for(x){}}
 	 * @param slices same as face number ,actual vertex number  is +1
+	 * 
+	 * not support horizontal connection.this means make a hoke
 	 * @return
 	 */
 	public JsArray<AnimationBone> createBone(List<Vector3> positions,int slices){
