@@ -80,6 +80,8 @@ public WeightResult autoWeight(Geometry geometry,JsArray<AnimationBone> bones){
 }
 /*
  * some case no need root,suchc case add 0 to ignore
+ * 
+ * TODO ignore root option usually root 0 ignored
  */
 public WeightResult autoWeight(Geometry geometry,JsArray<AnimationBone> bones,List<Integer> ignoreBones){
 	List<Vector3> bonePositions=Lists.newArrayList();
