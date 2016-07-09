@@ -19,7 +19,7 @@ public class PlainBoneCreator {
 	 * 
 	 * use BodyAndMeshFunctions.getMeshPosition()) to transfrom BodyAndMesh to Vector3
 	 * 
-	 * @param positions list must created loop for(y){for(x){}}
+	 * @param positions list must created loop for(y){for(x){}} , not contain root position
 	 * @param slices same as face number ,actual vertex number  is +1
 	 * 
 	 * not support horizontal connection.this means make a hoke
