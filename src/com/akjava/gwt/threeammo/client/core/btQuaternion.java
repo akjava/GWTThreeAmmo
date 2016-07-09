@@ -34,22 +34,25 @@ public final  native void setW(double w)/*-{
 this.setW(w);
 }-*/;
 
-public final  native void set(double x,double y,double z,double w)/*-{
+public final  native btQuaternion set(double x,double y,double z,double w)/*-{
 this.setX(x);
 this.setY(y);
 this.setZ(z);
 this.setW(w);
+return this;
 }-*/;
 
-public final  native void copy(Quaternion quaternion)/*-{
+public final  native btQuaternion copy(Quaternion quaternion)/*-{
 this.setX(quaternion.x);
 this.setY(quaternion.y);
 this.setZ(quaternion.z);
 this.setW(quaternion.w);
+return this;
 }-*/;
 
-public final  native void copyTo(Quaternion quaternion)/*-{
+public final  native btQuaternion copyTo(Quaternion quaternion)/*-{
 	quaternion.set(this.x(),this.y(),this.z(),this.w());
+	return this;
 }-*/;
 
 
