@@ -3,7 +3,7 @@ package com.akjava.gwt.threeammo.client;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.math.Vector2;
 
-public class BodyProperties {
+public class AmmoBodyPropertyData {
 	private double  friction;
 	private double  restitution;
 	private Vector2 damping=THREE.Vector2();
@@ -22,10 +22,10 @@ public class BodyProperties {
 	public Vector2 getDamping() {
 		return damping;
 	}
-	public void setDamping(double linear,double anguler) {
-		setDamping(THREE.Vector2(linear, anguler));
-	}
 	public void setDamping(Vector2 damping) {
 		this.damping = damping;
+	}
+	public void setDamping(double linear,double anguler) {
+		setDamping(THREE.Vector2(linear, anguler));
 	}
 }

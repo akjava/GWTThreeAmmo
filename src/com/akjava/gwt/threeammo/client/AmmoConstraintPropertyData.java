@@ -7,35 +7,8 @@ import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.threeammo.client.core.btTransform;
 import com.google.common.collect.Lists;
 
-/**
- * @deprecated
- * @author aki
- *
- */
-public class DistanceConstraintProperties {
-	
-	
-	private double baseDistance;
-	public DistanceConstraintProperties(double baseDistance) {
-		super();
-		this.baseDistance = baseDistance;
-	}
-	
-	public void updateFrameInA(btTransform transform,Vector3 pos1,Vector3 pos2){
-		transform.getOrigin().copy(pos2.clone().sub(pos1).multiplyScalar(frameInARelativePosRatio));
-	}
-	
-	public void updateFrameInB(btTransform transform,Vector3 pos1,Vector3 pos2){
-		transform.getOrigin().copy(pos2.clone().sub(pos1).multiplyScalar(frameInBRelativePosRatio));
-	}
-	
-	
-	public double getBaseDistance() {
-		return baseDistance;
-	}
-	public void setBaseDistance(double baseDistance) {
-		this.baseDistance = baseDistance;
-	}
+
+public class AmmoConstraintPropertyData {
 	private boolean useLinearReferenceFrameA=true;
 	public boolean isUseLinearReferenceFrameA() {
 		return useLinearReferenceFrameA;
@@ -116,6 +89,14 @@ public class DistanceConstraintProperties {
 	private Vector3 angularUpperLimit=THREE.Vector3().setScalar(Math.PI/2);
 	private Vector3 linearLowerLimit=THREE.Vector3();
 	private Vector3 linearUpperLimit=THREE.Vector3();
+	
+	public void updateFrameInA(btTransform transform,Vector3 pos1,Vector3 pos2){
+		transform.getOrigin().copy(pos2.clone().sub(pos1).multiplyScalar(frameInARelativePosRatio));
+	}
+	
+	public void updateFrameInB(btTransform transform,Vector3 pos1,Vector3 pos2){
+		transform.getOrigin().copy(pos2.clone().sub(pos1).multiplyScalar(frameInBRelativePosRatio));
+	}
 	public void setEnableSpringsAll(boolean value) {
 		for(int i=0;i<6;i++){
 			enableSprings.set(i, value);

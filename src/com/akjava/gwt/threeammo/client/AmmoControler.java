@@ -117,7 +117,8 @@ public void update(double dt){
 	deleteGarbages();
 }
 
-public void updateConstraint(btGeneric6DofSpringConstraint newConstraint,DistanceConstraintProperties data){
+//can use normal properties
+public void updateConstraint(btGeneric6DofSpringConstraint newConstraint,AmmoConstraintPropertyData data,double baseDistance){
 
 	for(int i=0;i<6;i++){
 		newConstraint.enableSpring(i, data.getEnableSprings().get(i));
@@ -128,8 +129,8 @@ public void updateConstraint(btGeneric6DofSpringConstraint newConstraint,Distanc
 	newConstraint.setAngularLowerLimit(makeVector3(data.getAngularLowerLimit()));
 	newConstraint.setAngularUpperLimit(makeVector3(data.getAngularUpperLimit()));
 	
-	newConstraint.setLinearLowerLimit(makeVector3(data.getLinearLowerLimit().clone().multiplyScalar(data.getBaseDistance())));
-	newConstraint.setLinearUpperLimit(makeVector3(data.getLinearUpperLimit().clone().multiplyScalar(data.getBaseDistance())));
+	newConstraint.setLinearLowerLimit(makeVector3(data.getLinearLowerLimit().clone().multiplyScalar(baseDistance)));
+	newConstraint.setLinearUpperLimit(makeVector3(data.getLinearUpperLimit().clone().multiplyScalar(baseDistance)));
 }
 
 

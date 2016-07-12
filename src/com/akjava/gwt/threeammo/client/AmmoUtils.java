@@ -26,7 +26,7 @@ public class AmmoUtils {
 	return $wnd.isNaN(object.x) || $wnd.isNaN(object.y)|| $wnd.isNaN(object.z) || $wnd.isNaN(object.w);
 	}-*/;
 
-	public static void updateBodyProperties(btRigidBody body, BodyProperties spherehProperties) {
+	public static void updateBodyProperties(btRigidBody body, AmmoBodyPropertyData spherehProperties) {
 		body.setFriction(spherehProperties.getFriction());
 		body.setRestitution(spherehProperties.getRestitution());
 		body.setDamping(spherehProperties.getDamping().getX(), spherehProperties.getDamping().getY());
