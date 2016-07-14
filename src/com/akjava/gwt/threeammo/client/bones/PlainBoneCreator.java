@@ -119,7 +119,7 @@ public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,
 				rootPosCount++;
 				vqMap.put(bones.get(i).getName(), vq);
 			}else{
-				break;
+				//break;
 			}
 		}
 		rootPos.divideScalar(rootPosCount);
