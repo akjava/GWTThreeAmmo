@@ -323,9 +323,14 @@ public void updateBone(Bone bone,BodyAndMesh bm,btTransform transform){
 	updateBone(bone, bm, transform, 1);
 }
 
-public void updateBone(Bone bone,BodyAndMesh bm,btTransform transform,double divided){
+public Vector3AndQuaternion updateBone(Bone bone,BodyAndMesh bm,btTransform transform,double divided){
 	Vector3AndQuaternion vq=getWorldTransform(bm,transform);
 	updateBone(bone, vq.getVector3(), vq.getQuaternion(),divided);
+	return vq;
+}
+public Vector3AndQuaternion updateBone(Bone bone,Vector3AndQuaternion vq,double divided){
+	updateBone(bone, vq.getVector3(), vq.getQuaternion(),divided);
+	return vq;
 }
 
 /*
