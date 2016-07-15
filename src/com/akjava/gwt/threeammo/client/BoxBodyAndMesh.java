@@ -5,10 +5,13 @@ import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.gwt.threeammo.client.core.btRigidBody;
 
 public class BoxBodyAndMesh extends BodyAndMesh{
-public BoxBodyAndMesh(Vector3 halfBoxSize,btRigidBody body, Mesh mesh) {
+	public BoxBodyAndMesh(Vector3 boxSize,btRigidBody body, Mesh mesh) {
+		this(boxSize,body,mesh,TYPE_BOX);
+	}
+	public BoxBodyAndMesh(Vector3 boxSize,btRigidBody body, Mesh mesh,int type) {
 		super(body, mesh);
-		this.boxSize=halfBoxSize;
-		setShapeType(TYPE_BOX);
+		this.boxSize=boxSize;
+		setShapeType(type);
 		setRotationSync(true);
 	}
 

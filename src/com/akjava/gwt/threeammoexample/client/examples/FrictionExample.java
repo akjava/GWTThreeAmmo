@@ -7,12 +7,15 @@ import com.akjava.gwt.threeammo.client.BodyAndMesh;
 import com.akjava.gwt.threeammo.client.BoxBodyAndMesh;
 import com.akjava.gwt.threeammo.client.core.Ammo;
 import com.akjava.gwt.threeammo.client.core.btVector3;
+import com.akjava.gwt.threeammo.client.widget.ShapeListBox;
 import com.akjava.gwt.threeammoexample.client.AbstractAmmoExample;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 
 public class FrictionExample extends AbstractAmmoExample{
 
@@ -34,6 +37,7 @@ public class FrictionExample extends AbstractAmmoExample{
 	private BodyAndMesh ball;
 	
 	
+	private ListBox shapeListBox;
 /**
  * 
  * force is not clear
@@ -59,17 +63,18 @@ public class FrictionExample extends AbstractAmmoExample{
 		
 		controlerRootPanel.add(new HTML("<h4>Ball Shape</h4>"));
 		controlerRootPanel.add(new Label("sphere naver stop"));
-		boxCheck = new CheckBox("Make box instead of shpere");
-		controlerRootPanel.add(boxCheck);
-		boxCheck.setValue(true);
-		boxCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-
+		
+		shapeListBox=new ShapeListBox();
+		
+		controlerRootPanel.add(shapeListBox);
+		shapeListBox.setSelectedIndex(BodyAndMesh.TYPE_BOX);
+		shapeListBox.addChangeHandler(new ChangeHandler() {
+			
 			@Override
-			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				newBall();
+			public void onChange(ChangeEvent event) {
+				
 				resetProperties();
 			}
-			
 		});
 		
 		
@@ -147,13 +152,20 @@ public class FrictionExample extends AbstractAmmoExample{
 	
 	
 	protected void newBall() {
-		boolean isBox=boxCheck.getValue();
+		int type=shapeListBox.getSelectedIndex();
 		if(ball!=null){
 			ammoControler.destroyBodyAndMesh(ball);
 		}
-		if(isBox){
+		if(type==BodyAndMesh.TYPE_BOX){
 			ball=createBox();
-		}else{
+		}else if(type==BodyAndMesh.TYPE_CYLINDER){
+			ball=createCylinder();
+		}else if(type==BodyAndMesh.TYPE_CAPSULE){
+			ball=createCapsule();
+		}else if(type==BodyAndMesh.TYPE_CONE){
+			ball=createCone();
+		}
+		else{
 			ball=createSphere();
 		}
 		
@@ -161,9 +173,11 @@ public class FrictionExample extends AbstractAmmoExample{
 
 
 	double zForce=10,xForce;
-	private CheckBox boxCheck;
+	
 	
 	public void resetProperties(){
+		newBall();//init rotation
+		
 		ball.getBody().setFriction(sphereFriction);
 		ball.getBody().setRestitution(sphereRestitution);
 		
@@ -171,6 +185,7 @@ public class FrictionExample extends AbstractAmmoExample{
 		
 		ball.getBody().setAngularVelocity(THREE.Vector3());//this working
 		ball.getBody().setLinearVelocity(THREE.Vector3(xForce, 0, zForce));
+		
 	}
 
 	public BodyAndMesh createSphere(){
@@ -188,6 +203,50 @@ public class FrictionExample extends AbstractAmmoExample{
 	}
 	public BodyAndMesh createBox(){
 		 BodyAndMesh bm=ammoControler.createBox(THREE.Vector3(2, 2, 2), 1, 0, 0, 0, 
+					THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().color(0x880000))
+							);
+		 
+		 bm.getBody().setActivationState(Ammo.DISABLE_DEACTIVATION);
+			btVector3 all=Ammo.btVector3(1, 1, 1);
+			bm.getBody().setLinearFactor(all);
+			bm.getBody().setAngularFactor(all);
+			all.destroy();
+			
+			
+		return bm;
+	}
+	public BodyAndMesh createCylinder(){
+		 BodyAndMesh bm=ammoControler.createCylinder(1,2, 1, 0, 0, 0, 
+					THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().color(0x880000))
+							);
+		 
+		 bm.getBody().setActivationState(Ammo.DISABLE_DEACTIVATION);
+			btVector3 all=Ammo.btVector3(1, 1, 1);
+			bm.getBody().setLinearFactor(all);
+			bm.getBody().setAngularFactor(all);
+			all.destroy();
+			
+			
+		return bm;
+	}
+	public BodyAndMesh createCapsule(){
+		
+		 BodyAndMesh bm=ammoControler.createCapsule(1,3, 1, 0, 0, 0, 
+					THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().color(0x880000))
+							);
+		 
+		 bm.getBody().setActivationState(Ammo.DISABLE_DEACTIVATION);
+			btVector3 all=Ammo.btVector3(1, 1, 1);
+			bm.getBody().setLinearFactor(all);
+			bm.getBody().setAngularFactor(all);
+			all.destroy();
+			
+			
+		return bm;
+	}
+	public BodyAndMesh createCone(){
+		
+		 BodyAndMesh bm=ammoControler.createCone(1,2, 1, 0, 0, 0, 
 					THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().color(0x880000))
 							);
 		 

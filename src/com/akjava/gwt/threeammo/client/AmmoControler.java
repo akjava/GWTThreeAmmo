@@ -257,6 +257,21 @@ public BoxBodyAndMesh createBox(Vector3 size,double mass,double x,double y,doubl
 	return object;
 }
 
+public BoxBodyAndMesh createCylinder(double radius,double height,double mass,double x,double y,double z,Material material){
+	BoxBodyAndMesh object=  BodyAndMesh.createCylinder(radius,height, mass, x, y, z, material);
+	addBodyMesh(object);
+	return object;
+}
+public BoxBodyAndMesh createCapsule(double radius,double height,double mass,double x,double y,double z,Material material){
+	BoxBodyAndMesh object=  BodyAndMesh.createCapsule(radius,height, mass, x, y, z, material);
+	addBodyMesh(object);
+	return object;
+}
+public BoxBodyAndMesh createCone(double radius,double height,double mass,double x,double y,double z,Material material){
+	BoxBodyAndMesh object=  BodyAndMesh.createCone(radius,height, mass, x, y, z, material);
+	addBodyMesh(object);
+	return object;
+}
 /*
  * watch out only live until next call update
  */

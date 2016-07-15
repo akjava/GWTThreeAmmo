@@ -2,10 +2,10 @@ package com.akjava.gwt.threeammo.client;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.akjava.gwt.lib.client.LogUtils;
-import com.akjava.gwt.three.client.java.ThreeLog;
 import com.akjava.gwt.three.client.js.THREE;
+import com.akjava.gwt.three.client.js.core.Geometry;
 import com.akjava.gwt.three.client.js.materials.Material;
+import com.akjava.gwt.three.client.js.math.Matrix4;
 import com.akjava.gwt.three.client.js.math.Quaternion;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Mesh;
@@ -18,6 +18,9 @@ public class BodyAndMesh extends AmmoAndThreeContainer{
 
 public static final int TYPE_SPHERE=0;
 public static final int TYPE_BOX=1;
+public static final int TYPE_CYLINDER=2;
+public static final int TYPE_CAPSULE=3;
+public static final int TYPE_CONE = 4;
 
 private int shapeType;
 public int getShapeType() {
@@ -76,8 +79,8 @@ public static SphereBodyAndMesh createSphere(double radius,double mass,double x,
 	return sphere;
 }
 
-public static BoxBodyAndMesh createBox(Vector3 halfSize,double mass,Vector3 position,Material material){
-	return createBox(halfSize, mass, position.getX(), position.getY(), position.getZ(), material);
+public static BoxBodyAndMesh createBox(Vector3 size,double mass,Vector3 position,Material material){
+	return createBox(size, mass, position.getX(), position.getY(), position.getZ(), material);
 }
 
 
@@ -89,6 +92,72 @@ public static BoxBodyAndMesh createBox(Vector3 size,double mass,double x,double 
 	Mesh mesh=THREE.Mesh(THREE.BoxGeometry(size.getX(), size.getY(), size.getZ()),material);
 	mesh.setPosition(x, y, z);
 	BoxBodyAndMesh box= new BoxBodyAndMesh(size.clone(),body, mesh);
+	
+	
+	return box;
+}
+
+public static BoxBodyAndMesh createCylinder(double radius,double halfHeight,double mass,Vector3 position,Material material){
+	return createCylinder(radius,halfHeight, mass, position.getX(), position.getY(), position.getZ(), material);
+}
+
+
+public static BoxBodyAndMesh createCylinder(double radius,double height,double mass,double x,double y,double z,Material material){
+	btVector3 vec3=Ammo.btVector3(radius, height/2, radius);
+	btRigidBody body=makeCylinderBody(vec3,mass,x,y,z);
+	vec3.destroy();
+	
+	Mesh mesh=THREE.Mesh(THREE.CylinderGeometry(radius, radius, height, 10),material);
+	mesh.setPosition(x, y, z);
+	BoxBodyAndMesh box= new BoxBodyAndMesh(THREE.Vector3(radius, height, 0),body, mesh,TYPE_CYLINDER);
+	
+	
+	return box;
+}
+
+public static BoxBodyAndMesh createCone(double radius,double halfHeight,double mass,Vector3 position,Material material){
+	return createCone(radius,halfHeight, mass, position.getX(), position.getY(), position.getZ(), material);
+}
+
+
+public static BoxBodyAndMesh createCone(double radius,double height,double mass,double x,double y,double z,Material material){
+	
+	btRigidBody body=makeConeBody(radius,height,mass,x,y,z);
+	
+	
+	Mesh mesh=THREE.Mesh(THREE.CylinderGeometry(radius/10, radius, height, 10),material);
+	mesh.setPosition(x, y, z);
+	BoxBodyAndMesh box= new BoxBodyAndMesh(THREE.Vector3(radius, height, 0),body, mesh,TYPE_CONE);
+	
+	
+	return box;
+}
+
+public static BoxBodyAndMesh createCapsule(double radius,double halfHeight,double mass,Vector3 position,Material material){
+	return createCapsule(radius,halfHeight, mass, position.getX(), position.getY(), position.getZ(), material);
+}
+
+
+public static BoxBodyAndMesh createCapsule(double radius,double height,double mass,double x,double y,double z,Material material){
+	
+	btRigidBody body=makeCapsuleBody(radius,height,mass,x,y,z);
+
+	double move=height/2-radius;
+	Geometry cylinder=THREE.CylinderGeometry(radius, radius, height-radius*2, 10);
+	Geometry sphere=THREE.SphereGeometry(radius, 6,6);
+	Matrix4 moveUpMatrix=THREE.Matrix4().makeTranslation(0, -move, 0);
+	sphere.applyMatrix(moveUpMatrix);
+	cylinder.merge(sphere);
+	
+	Geometry sphere2=THREE.SphereGeometry(radius, 6,6);
+	Matrix4 downUpMatrix=THREE.Matrix4().makeTranslation(0, move, 0);
+	sphere2.applyMatrix(downUpMatrix);
+	cylinder.merge(sphere2);
+	
+	
+	Mesh mesh=THREE.Mesh(cylinder,material);
+	mesh.setPosition(x, y, z);
+	BoxBodyAndMesh box= new BoxBodyAndMesh(THREE.Vector3(radius, height, 0),body, mesh,TYPE_CAPSULE);
 	
 	
 	return box;
@@ -146,7 +215,16 @@ public static final   btRigidBody makeSphereBody(double radius,double mass,Vecto
 public static final   btRigidBody makeBoxBody(btVector3 halfSize,double mass,Vector3 pos){
 	return makeBoxBody(halfSize, mass, pos.getX(),pos.getY(),pos.getZ());
 }
+public static final   btRigidBody makeCylinderBody(btVector3 halfSize,double mass,Vector3 pos){
+	return makeCylinderBody(halfSize, mass, pos.getX(),pos.getY(),pos.getZ());
+}
+public static final   btRigidBody makeCapsuleBody(double radius,double height,double mass,Vector3 pos){
+	return makeCapsuleBody(radius,height, mass, pos.getX(),pos.getY(),pos.getZ());
+}
 
+public static final   btRigidBody makeConeBody(double radius,double height,double mass,Vector3 pos){
+	return makeConeBody(radius,height, mass, pos.getX(),pos.getY(),pos.getZ());
+}
 //TODO need rotate
 public static final  native btRigidBody makeSphereBody(double radius,double mass,double x,double y,double z)/*-{
 var pos=new $wnd.Ammo.btVector3(x, y, z);
@@ -199,6 +277,118 @@ var form = new $wnd.Ammo.btTransform();
   form.setOrigin(pos);
  
   var box = new $wnd.Ammo.btBoxShape(halfSize);
+  var localInertia = new $wnd.Ammo.btVector3(0, 0, 0);//
+  if(mass!=0){
+  	box.calculateLocalInertia(mass,localInertia);
+  }
+  
+  var body= new $wnd.Ammo.btRigidBody(
+      new $wnd.Ammo.btRigidBodyConstructionInfo(
+          mass, 
+          new $wnd.Ammo.btDefaultMotionState(form), 
+          box, 
+          localInertia 
+      )
+  );
+  
+  
+  //btSphere has nothing special method
+  //body._sphereShape=sphere;
+  
+  body._mass=mass;
+
+  //only can destroying here,sphere cant destroy
+  $wnd.Ammo.destroy(form);
+  $wnd.Ammo.destroy(localInertia);
+  
+  return body;
+}-*/;
+
+public static final  native btRigidBody makeCylinderBody(btVector3 halfSize,double mass,double x,double y,double z)/*-{
+var pos=new $wnd.Ammo.btVector3(x, y, z);
+var form = new $wnd.Ammo.btTransform();
+  form.setIdentity();
+  form.setOrigin(pos);
+ 
+  var box = new $wnd.Ammo.btCylinderShape(halfSize);
+  var localInertia = new $wnd.Ammo.btVector3(0, 0, 0);//
+  if(mass!=0){
+  	box.calculateLocalInertia(mass,localInertia);
+  }
+  
+  var body= new $wnd.Ammo.btRigidBody(
+      new $wnd.Ammo.btRigidBodyConstructionInfo(
+          mass, 
+          new $wnd.Ammo.btDefaultMotionState(form), 
+          box, 
+          localInertia 
+      )
+  );
+  
+  
+  //btSphere has nothing special method
+  //body._sphereShape=sphere;
+  
+  body._mass=mass;
+
+  //only can destroying here,sphere cant destroy
+  $wnd.Ammo.destroy(form);
+  $wnd.Ammo.destroy(localInertia);
+  
+  return body;
+}-*/;
+
+/**
+ * 
+ * @param radius
+ * @param height contain both circle
+ * @param mass
+ * @param x
+ * @param y
+ * @param z
+ * @return
+ */
+public static final  native btRigidBody makeCapsuleBody(double radius,double height,double mass,double x,double y,double z)/*-{
+var pos=new $wnd.Ammo.btVector3(x, y, z);
+var form = new $wnd.Ammo.btTransform();
+  form.setIdentity();
+  form.setOrigin(pos);
+ 
+  var box = new $wnd.Ammo.btCapsuleShape(radius,height-(radius*2));
+  var localInertia = new $wnd.Ammo.btVector3(0, 0, 0);//
+  if(mass!=0){
+  	box.calculateLocalInertia(mass,localInertia);
+  }
+  
+  var body= new $wnd.Ammo.btRigidBody(
+      new $wnd.Ammo.btRigidBodyConstructionInfo(
+          mass, 
+          new $wnd.Ammo.btDefaultMotionState(form), 
+          box, 
+          localInertia 
+      )
+  );
+  
+  
+  //btSphere has nothing special method
+  //body._sphereShape=sphere;
+  
+  body._mass=mass;
+
+  //only can destroying here,sphere cant destroy
+  $wnd.Ammo.destroy(form);
+  $wnd.Ammo.destroy(localInertia);
+  
+  return body;
+}-*/;
+
+public static final  native btRigidBody makeConeBody(double radius,double height,double mass,double x,double y,double z)/*-{
+var pos=new $wnd.Ammo.btVector3(x, y, z);
+var form = new $wnd.Ammo.btTransform();
+  form.setIdentity();
+  form.setOrigin(pos);
+ 
+  var box = new $wnd.Ammo.btConeShape(radius,height);
   var localInertia = new $wnd.Ammo.btVector3(0, 0, 0);//
   if(mass!=0){
   	box.calculateLocalInertia(mass,localInertia);
