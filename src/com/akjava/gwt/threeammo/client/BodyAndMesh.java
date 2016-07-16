@@ -10,6 +10,7 @@ import com.akjava.gwt.three.client.js.math.Quaternion;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.gwt.threeammo.client.core.Ammo;
+import com.akjava.gwt.threeammo.client.core.btQuaternion;
 import com.akjava.gwt.threeammo.client.core.btRigidBody;
 import com.akjava.gwt.threeammo.client.core.btTransform;
 import com.akjava.gwt.threeammo.client.core.btVector3;
@@ -18,8 +19,8 @@ public class BodyAndMesh extends AmmoAndThreeContainer{
 
 public static final int TYPE_SPHERE=0;
 public static final int TYPE_BOX=1;
-public static final int TYPE_CYLINDER=2;
-public static final int TYPE_CAPSULE=3;
+public static final int TYPE_CAPSULE=2;
+public static final int TYPE_CYLINDER=3;
 public static final int TYPE_CONE = 4;
 
 private int shapeType;
@@ -109,6 +110,7 @@ public static BoxBodyAndMesh createCylinder(double radius,double height,double m
 	
 	Mesh mesh=THREE.Mesh(THREE.CylinderGeometry(radius, radius, height, 10),material);
 	mesh.setPosition(x, y, z);
+	//TODO
 	BoxBodyAndMesh box= new BoxBodyAndMesh(THREE.Vector3(radius, height, 0),body, mesh,TYPE_CYLINDER);
 	
 	
@@ -133,17 +135,20 @@ public static BoxBodyAndMesh createCone(double radius,double height,double mass,
 	return box;
 }
 
-public static BoxBodyAndMesh createCapsule(double radius,double halfHeight,double mass,Vector3 position,Material material){
+public static CapsuleBodyAndMesh createCapsule(double radius,double halfHeight,double mass,Vector3 position,Material material){
 	return createCapsule(radius,halfHeight, mass, position.getX(), position.getY(), position.getZ(), material);
+}
+public static CapsuleBodyAndMesh createCapsule(double radius,double halfHeight,double mass,Vector3 position,Quaternion rotation,Material material){
+	btQuaternion q=Ammo.btQuaternion().copy(rotation);
+	CapsuleBodyAndMesh cp= createCapsule(radius,halfHeight, mass, position.getX(), position.getY(), position.getZ(),q, material);
+	q.destroy();
+	return cp;
 }
 
 
-public static BoxBodyAndMesh createCapsule(double radius,double height,double mass,double x,double y,double z,Material material){
-	
-	btRigidBody body=makeCapsuleBody(radius,height,mass,x,y,z);
-
+public static Geometry createCapsuleGeometry(double radius,double height){
 	double move=height/2-radius;
-	Geometry cylinder=THREE.CylinderGeometry(radius, radius, height-radius*2, 10);
+	Geometry cylinder=THREE.CylinderGeometry(radius, radius, Math.max(0.0001, height-radius*2), 10);
 	Geometry sphere=THREE.SphereGeometry(radius, 6,6);
 	Matrix4 moveUpMatrix=THREE.Matrix4().makeTranslation(0, -move, 0);
 	sphere.applyMatrix(moveUpMatrix);
@@ -153,14 +158,24 @@ public static BoxBodyAndMesh createCapsule(double radius,double height,double ma
 	Matrix4 downUpMatrix=THREE.Matrix4().makeTranslation(0, move, 0);
 	sphere2.applyMatrix(downUpMatrix);
 	cylinder.merge(sphere2);
+	return cylinder;
+}
+
+public static CapsuleBodyAndMesh createCapsule(double radius,double height,double mass,double x,double y,double z,btQuaternion q,Material material){
 	
+	btRigidBody body=makeCapsuleBody(radius,height,mass,x,y,z,q);
+
 	
-	Mesh mesh=THREE.Mesh(cylinder,material);
+	Mesh mesh=THREE.Mesh(createCapsuleGeometry(radius,height),material);
 	mesh.setPosition(x, y, z);
-	BoxBodyAndMesh box= new BoxBodyAndMesh(THREE.Vector3(radius, height, 0),body, mesh,TYPE_CAPSULE);
+	CapsuleBodyAndMesh box= new CapsuleBodyAndMesh(radius,height,body, mesh,TYPE_CAPSULE);
 	
 	
 	return box;
+}
+
+public static CapsuleBodyAndMesh createCapsule(double radius,double height,double mass,double x,double y,double z,Material material){
+	return createCapsule(radius, height, mass, x, y, z,null, material);
 }
 
 public SphereBodyAndMesh castToSphere(){
@@ -168,8 +183,13 @@ public SphereBodyAndMesh castToSphere(){
 	
 	return (SphereBodyAndMesh)this;
 }
+public CapsuleBodyAndMesh castToCapsule(){
+	checkArgument(shapeType==TYPE_CAPSULE,"this shape type is "+shapeType+".this is not capsule-shape.you invalidly to cast.it would make Uncaught java.lang.ClassCastException");
+	
+	return (CapsuleBodyAndMesh)this;
+}
 public BoxBodyAndMesh castToBox(){
-	checkArgument(shapeType==TYPE_BOX,"this shape type is "+shapeType+".this is not sphere-shape.you invalidly to cast.it would make Uncaught java.lang.ClassCastException");
+	checkArgument(shapeType==TYPE_BOX,"this shape type is "+shapeType+".this is not box-shape.you invalidly to cast.it would make Uncaught java.lang.ClassCastException");
 	
 	return (BoxBodyAndMesh)this;
 }
@@ -338,6 +358,10 @@ var form = new $wnd.Ammo.btTransform();
   return body;
 }-*/;
 
+public static final   btRigidBody makeCapsuleBody(double radius,double height,double mass,double x,double y,double z){
+	return makeCapsuleBody(radius, height, mass, x, y, z,null);
+}
+
 /**
  * 
  * @param radius
@@ -348,11 +372,14 @@ var form = new $wnd.Ammo.btTransform();
  * @param z
  * @return
  */
-public static final  native btRigidBody makeCapsuleBody(double radius,double height,double mass,double x,double y,double z)/*-{
+public static final  native btRigidBody makeCapsuleBody(double radius,double height,double mass,double x,double y,double z,btQuaternion rotation)/*-{
 var pos=new $wnd.Ammo.btVector3(x, y, z);
 var form = new $wnd.Ammo.btTransform();
   form.setIdentity();
   form.setOrigin(pos);
+  if(rotation){
+  	form.setRotation(rotation);
+  }
  
   var box = new $wnd.Ammo.btCapsuleShape(radius,height-(radius*2));
   var localInertia = new $wnd.Ammo.btVector3(0, 0, 0);//

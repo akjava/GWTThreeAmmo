@@ -224,12 +224,19 @@ public void addBodyMesh(BodyAndMesh object){
 	autoSyncingBodies.add(object);
 }
 
-public void addBodyMesh(BodyAndMesh object,int type,int colliedWith){
+/**
+ * right now stop collied type,because somet time need collied same
+ * @param object
+ * @param colliedType
+ * @param colliedWith
+ */
+public void addBodyMesh(BodyAndMesh object,int colliedType,int colliedWith){
 	if( object.getMesh()!=null){
 	   scene.add( object.getMesh());
 	}
 	if(object.getBody()!=null){
-		world.addRigidBody(object.getBody(),type,colliedWith);
+		//world.addRigidBody(object.getBody(),type,colliedWith);
+		world.addRigidBody(object.getBody());
 	}
 	
 	autoSyncingBodies.add(object);
@@ -262,8 +269,8 @@ public BoxBodyAndMesh createCylinder(double radius,double height,double mass,dou
 	addBodyMesh(object);
 	return object;
 }
-public BoxBodyAndMesh createCapsule(double radius,double height,double mass,double x,double y,double z,Material material){
-	BoxBodyAndMesh object=  BodyAndMesh.createCapsule(radius,height, mass, x, y, z, material);
+public CapsuleBodyAndMesh createCapsule(double radius,double height,double mass,double x,double y,double z,Material material){
+	CapsuleBodyAndMesh object=  BodyAndMesh.createCapsule(radius,height, mass, x, y, z, material);
 	addBodyMesh(object);
 	return object;
 }
