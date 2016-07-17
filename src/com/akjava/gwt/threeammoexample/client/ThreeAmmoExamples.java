@@ -11,6 +11,7 @@ import com.akjava.gwt.threeammoexample.client.examples.FrictionExample;
 import com.akjava.gwt.threeammoexample.client.examples.HelloExample;
 import com.akjava.gwt.threeammoexample.client.examples.MassExample;
 import com.akjava.gwt.threeammoexample.client.examples.RestitutionExample;
+import com.akjava.gwt.threeammoexample.client.examples.SoftDampingExample;
 import com.akjava.gwt.threeammoexample.client.examples.constraints.Point2PointAndGenericExample;
 import com.akjava.gwt.threeammoexample.client.examples.constraints.Point2PointAndGenericExample2;
 import com.akjava.gwt.threeammoexample.client.examples.constraints.Point2PointExample;
@@ -71,6 +72,8 @@ public class ThreeAmmoExamples implements EntryPoint,ExampleOwner {
 		
 		
 		List<AbstractAmmoExample> examples=Lists.newArrayList();
+		
+		examples.add(new SoftDampingExample());
 		
 		examples.add(new HelloExample());
 		examples.add(new RestitutionExample());

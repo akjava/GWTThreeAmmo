@@ -57,18 +57,45 @@ public static final btDiscreteDynamicsWorld initWorld(){
 	return initWorld(0,-10,0);
 }
 
+public static native final btDiscreteDynamicsWorld initSoftBodyWorld(double x,double y,double z)/*-{
+
+//these no need to destroy
+var collisionConfiguration = new $wnd.Ammo.btSoftBodyRigidBodyCollisionConfiguration();
+var dispatcher = new $wnd.Ammo.btCollisionDispatcher(collisionConfiguration);
+var broadphase  = new $wnd.Ammo.btDbvtBroadphase();
+var solver = new $wnd.Ammo.btSequentialImpulseConstraintSolver();
+var softSolver = new $wnd.Ammo.btDefaultSoftBodySolver();
+
+
+var dynamicsWorld = new $wnd.Ammo.btSoftRigidDynamicsWorld(
+    dispatcher, 
+    broadphase , 
+    solver, 
+    collisionConfiguration,
+    softSolver
+    
+);
+var gravity=new $wnd.Ammo.btVector3(x, y, z);
+dynamicsWorld.setGravity(gravity);
+$wnd.Ammo.destroy(gravity);
+
+return dynamicsWorld;
+
+return world;
+}-*/;
+
 public static native final btDiscreteDynamicsWorld initWorld(double x,double y,double z)/*-{
 
 	//these no need to destroy
     var collisionConfiguration = new $wnd.Ammo.btDefaultCollisionConfiguration();
     var dispatcher = new $wnd.Ammo.btCollisionDispatcher(collisionConfiguration);
-    var overlappingPairCache = new $wnd.Ammo.btDbvtBroadphase();
+    var broadphase  = new $wnd.Ammo.btDbvtBroadphase();
     var solver = new $wnd.Ammo.btSequentialImpulseConstraintSolver();
     
     
     var dynamicsWorld = new $wnd.Ammo.btDiscreteDynamicsWorld(
         dispatcher, 
-        overlappingPairCache, 
+        broadphase , 
         solver, 
         collisionConfiguration
     );

@@ -7,7 +7,7 @@ protected btDiscreteDynamicsWorld(){}
 /**
  * 
  * @param timeStep usually 1.0/60
- * @param maxSubSteps usually 0
+ * @Ammo fixed 1.0/60 default
  */
 public final  native void stepSimulation(double timeStep,int maxSubSteps)/*-{
 this.stepSimulation(timeStep,maxSubSteps);
@@ -36,5 +36,13 @@ public final  native void removeConstraint(btTypedConstraint constraint)/*-{
 this.removeConstraint(constraint);
 }-*/;
 
+
+public final  native btVector3 getGravity()/*-{
+return this.getGravity();
+}-*/;
+
+public final  native void setGravity(btVector3 gravity)/*-{
+this.setGravity(gravity);
+}-*/;
 
 }

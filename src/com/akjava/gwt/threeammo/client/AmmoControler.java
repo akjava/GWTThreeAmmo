@@ -62,6 +62,11 @@ private void destroyRigidBody(btRigidBody body){
 	garbage.push(body);
 }
 
+public void setGravity(double x,double y,double z){
+	btVector3 gravity=makeVector3(x, y, z);
+	world.setGravity(gravity);
+}
+
 
 private List<ConstraintAndLine> autoSyncingConstraints=Lists.newArrayList();
 private List<BodyAndMesh> autoSyncingBodies=Lists.newArrayList();
@@ -119,7 +124,7 @@ public void update(double dt){
 
 //can use normal properties
 public void updateConstraint(btGeneric6DofSpringConstraint newConstraint,AmmoConstraintPropertyData data,double baseDistance){
-
+//this is maximum of ammo.js can do
 	for(int i=0;i<6;i++){
 		newConstraint.enableSpring(i, data.getEnableSprings().get(i));
 		newConstraint.setStiffness(i, data.getStiffnesses().get(i));
