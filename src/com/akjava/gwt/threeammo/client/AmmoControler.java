@@ -33,6 +33,15 @@ public Scene getScene() {
 	return scene;
 }
 
+private int substeps=0;
+
+public int getSubsteps() {
+	return substeps;
+}
+
+public void setSubsteps(int substeps) {
+	this.substeps = substeps;
+}
 
 public void destroyConstraintOnly(btTypedConstraint constraint){
 	world.removeConstraint(constraint);
@@ -108,7 +117,7 @@ public void destroyWorld(){
 }
 
 public void update(double dt){
-	world.stepSimulation(dt, 0);
+	world.stepSimulation(dt, substeps);
 	for(BodyAndMesh object:autoSyncingBodies){
 		object.syncTransform();
 	}
