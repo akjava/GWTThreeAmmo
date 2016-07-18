@@ -3,6 +3,7 @@ package com.akjava.gwt.threeammo.client.bones;
 import java.util.List;
 import java.util.Map;
 
+import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.three.client.gwt.boneanimation.AnimationBone;
 import com.akjava.gwt.three.client.java.utils.AnimationUtils;
 import com.akjava.gwt.three.client.js.THREE;
@@ -12,6 +13,7 @@ import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
 import com.akjava.gwt.threeammo.client.AmmoControler;
 import com.akjava.gwt.threeammo.client.BodyAndMesh;
 import com.akjava.gwt.threeammo.client.Vector3AndQuaternion;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -87,6 +89,22 @@ public class PlainBoneCreator {
 		
 		
 		return bones;
+	}
+	
+	public static List<List<Integer>> splitBySlices(JsArray<AnimationBone> bones,int slices){
+		List<List<Integer>> list=Lists.newArrayList();
+		int horizontalVertexCount=slices+1;
+		int verticalVertexCount=(bones.length()-1)/horizontalVertexCount;
+		
+		for(int i=0;i<horizontalVertexCount;i++){
+			List<Integer> array=Lists.newArrayList();
+			for(int j=0;j<verticalVertexCount;j++){
+				int index=verticalVertexCount*i+j+1;//0 is root
+				array.add(index);
+			}
+			list.add(array);
+		}
+		return list;
 	}
 	
 
