@@ -228,14 +228,7 @@ public ConstraintAndLine createGeneric6DofConstraint(BodyAndMesh body1,BodyAndMe
 }
 
 public void addBodyMesh(BodyAndMesh object){
-	if( object.getMesh()!=null){
-	   scene.add( object.getMesh());
-	}
-	if(object.getBody()!=null){
-		world.addRigidBody(object.getBody());
-	}
-	
-	autoSyncingBodies.add(object);
+	addBodyMesh(object,-1,-1);
 }
 
 /**
@@ -249,8 +242,11 @@ public void addBodyMesh(BodyAndMesh object,int colliedType,int colliedWith){
 	   scene.add( object.getMesh());
 	}
 	if(object.getBody()!=null){
-		//world.addRigidBody(object.getBody(),type,colliedWith);
-		world.addRigidBody(object.getBody());
+		if(colliedType!=-1 && colliedWith!=-1){
+			world.addRigidBody(object.getBody(),colliedType,colliedWith);
+		}else{
+			world.addRigidBody(object.getBody());
+		}
 	}
 	
 	autoSyncingBodies.add(object);
