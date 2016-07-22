@@ -1,12 +1,15 @@
 package com.akjava.gwt.threeammo.client.bones;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.Map;
 
-import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.three.client.gwt.boneanimation.AnimationBone;
 import com.akjava.gwt.three.client.java.utils.AnimationUtils;
 import com.akjava.gwt.three.client.js.THREE;
+import com.akjava.gwt.three.client.js.math.Vector2;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Bone;
 import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
@@ -108,6 +111,14 @@ public class PlainBoneCreator {
 	}
 	
 
+	public static Vector2 parseBoneName(String boneName){
+		checkNotNull(boneName,"boneName is  null");
+		checkArgument(boneName.indexOf(",")!=-1,"not plain-bone name ");
+		String[] name=boneName.split(",");
+		int atX=Integer.parseInt(name[0]);
+		int atY=Integer.parseInt(name[1]);
+		return THREE.Vector2(atX, atY);
+	}
 
 public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles,double divided){
 		
