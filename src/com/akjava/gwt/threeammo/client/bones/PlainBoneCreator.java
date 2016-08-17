@@ -6,12 +6,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 import java.util.Map;
 
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.boneanimation.AnimationBone;
 import com.akjava.gwt.three.client.java.utils.AnimationUtils;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.math.Vector2;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Bone;
+import com.akjava.gwt.three.client.js.objects.Skeleton;
 import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
 import com.akjava.gwt.threeammo.client.AmmoControler;
 import com.akjava.gwt.threeammo.client.BodyAndMesh;
@@ -42,6 +44,12 @@ public class PlainBoneCreator {
 	public PlainBoneCreator startVerticalIndex(int index){
 		startVerticalIndex=index;
 		return this;
+	}
+	public static int calcurateBoneCount(int positionsSize,int slices){
+		int ret=1;
+		int horizontalVertexCount=slices+1;
+		int verticalVertexCount=positionsSize/horizontalVertexCount;
+		return ret+horizontalVertexCount*verticalVertexCount;
 	}
 	public JsArray<AnimationBone> createBone(List<Vector3> positions,int slices){
 		JsArray<AnimationBone> bones=JavaScriptObject.createArray().cast();
@@ -163,7 +171,7 @@ public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,
 			int atY=Integer.parseInt(name[1]);
 			
 			
-			if(atY==0){
+			if(atY==0){//already calcurated for make root(center) pos
 				Vector3AndQuaternion vq=vqMap.get(bones.get(i).getName());
 				ammoControler.updateBone(bones.get(i),vq,divided);
 			}else{
@@ -178,6 +186,146 @@ public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,
 		//somehow faild TODO fix ,maybe update root first
 		
 	}
+
+
+public static native final void pose(Skeleton skelton,int offset,int length)/*-{
+
+
+	var bone;
+
+	// recover the bind-time world matrices
+
+	for ( var b = offset, bl = offset+length; b < bl; b ++ ) {
+
+	   
+		bone = skelton.bones[ b ];
+
+		if ( bone ) {
+
+			bone.matrixWorld.getInverse( skelton.boneInverses[ b ] );
+
+		}
+
+	}
+
+	// compute the local matrices, positions, rotations and scales
+
+	for ( var b = offset, bl = offset+length; b < bl; b ++ ) {
+
+		bone = skelton.bones[ b ];
+		
+		if ( bone ) {
+
+			if ( bone.parent ) {
+
+				bone.matrix.getInverse( bone.parent.matrixWorld );
+				bone.matrix.multiply( bone.matrixWorld );
+
+			} else {
+
+				bone.matrix.copy( bone.matrixWorld );
+
+			}
+
+			bone.matrix.decompose( bone.position, bone.quaternion, bone.scale );
+
+		}
+
+	}
+
+}-*/;
+
+public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles,double divided,String suffix,int offset,int boneLength){
+	
+	
+	JsArray<Bone> bones=mesh.getSkeleton().getBones();
+	
+	if(offset+boneLength>bones.length()){
+		LogUtils.log("invalid bone offset or length:offset="+offset+",boneLength="+boneLength+",bones="+bones.length());
+		return;
+	}
+	
+	//LogUtils.log("reset!");
+	//mesh.getSkeleton().pose();//is this reset?,maybe yes
+	
+	pose(mesh.getSkeleton(),offset+1,boneLength-1);
+	
+	
+	Vector3 rootPos=THREE.Vector3();
+	int rootPosCount=0;
+	//no need [0] root
+	Map<String,Vector3AndQuaternion> vqMap=Maps.newHashMap();
+	for(int i=1+offset;i<offset+boneLength;i++){
+		if(bones.get(i).getName().equals("root")){//guess never happen
+			continue;
+		}
+
+		if(bones.get(i).getName().length()<suffix.length()){
+			LogUtils.log("smaller than suffix,invalid name:"+bones.get(i).getName());
+			continue;
+		}
+		
+		String[] name=bones.get(i).getName().substring(suffix.length()).split(",");
+		
+		if(name.length==1){
+			LogUtils.log("not cordinate pattern,invalid name:"+bones.get(i).getName());
+			continue;
+		}
+		
+		int atX=Integer.parseInt(name[0]);
+		int atY=Integer.parseInt(name[1]);
+		
+		if(atY==0){
+			BodyAndMesh bm=getParticle(particles,w,atX, atY);
+			Vector3AndQuaternion vq=ammoControler.getWorldTransform(bm,null);
+			rootPos.add(vq.getVector3());
+			rootPosCount++;
+			vqMap.put(bones.get(i).getName(), vq);
+		}else{
+			//break;
+		}
+	}
+	rootPos.divideScalar(rootPosCount);
+	//no need root? can't trust this root value
+	//ammoControler.updateBone(bones.get(offset), rootPos,THREE.Quaternion(),divided);//TODO support quaternion
+	
+	for(int i=1+offset;i<offset+boneLength;i++){
+		
+		if(bones.get(i).getName().equals("root")){
+			continue;
+		}
+		
+		if(bones.get(i).getName().length()<suffix.length()){
+			LogUtils.log("smaller than suffix,invalid name:"+bones.get(i).getName());
+			continue;
+		}
+		
+		String[] name=bones.get(i).getName().substring(suffix.length()).split(",");
+		
+		if(name.length==1){
+			LogUtils.log("not cordinate pattern,invalid name:"+bones.get(i).getName());
+			continue;
+		}
+		
+		int atY=Integer.parseInt(name[1]);
+		
+		//LogUtils.log("update-bone:"+bones.get(i).getName());
+		
+		if(atY==0){//already calcurated for make root(center) pos
+			Vector3AndQuaternion vq=vqMap.get(bones.get(i).getName());
+			ammoControler.updateBone(bones.get(i),vq,divided);
+		}else{
+			int atX=Integer.parseInt(name[0]);
+			//should i make a body and bone?
+			BodyAndMesh bm=getParticle(particles,w,atX, atY);
+			ammoControler.updateBone(bones.get(i), bm,null,divided);
+		}	
+	}
+	
+	//update root-pos
+	//somehow faild TODO fix ,maybe update root first
+	
+}
 
 	public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,List<BodyAndMesh> particles){
 		syncBones(ammoControler, mesh, w, particles,1);
