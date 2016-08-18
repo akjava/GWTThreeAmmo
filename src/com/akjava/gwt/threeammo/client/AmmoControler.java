@@ -384,7 +384,7 @@ public void updateBone(Bone bone,Vector3 position,Quaternion rotation,double div
 	
 	Vector3 v1=THREE.Vector3();
 	v1.copy(position).divideScalar(divided);//some scale modifying,
-	bone.worldToLocal(v1);//what is this?
+	bone.worldToLocal(v1);//what is this? vector.applyMatrix4( m1.getInverse( this.matrixWorld ) );
 	v1.add(bone.getPosition());
 	
 	bone.getPosition().copy(v1);

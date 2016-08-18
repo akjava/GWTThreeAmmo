@@ -248,7 +248,10 @@ public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,
 	//LogUtils.log("reset!");
 	//mesh.getSkeleton().pose();//is this reset?,maybe yes
 	
-	pose(mesh.getSkeleton(),offset+1,boneLength-1);
+	//some how this change scale
+	//pose(mesh.getSkeleton(),offset+1,boneLength-1);
+	pose(mesh.getSkeleton(),offset,boneLength);
+	
 	
 	
 	Vector3 rootPos=THREE.Vector3();
@@ -286,8 +289,10 @@ public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,
 		}
 	}
 	rootPos.divideScalar(rootPosCount);
+	rootPos.divideScalar(500);//character //temporary.somehow become small & strange position
 	//no need root? can't trust this root value
-	//ammoControler.updateBone(bones.get(offset), rootPos,THREE.Quaternion(),divided);//TODO support quaternion
+	//no root
+	ammoControler.updateBone(bones.get(offset), rootPos,THREE.Quaternion(),divided);//TODO support quaternion
 	
 	for(int i=1+offset;i<offset+boneLength;i++){
 		
@@ -311,9 +316,15 @@ public static void syncBones(AmmoControler ammoControler,SkinnedMesh mesh,int w,
 		
 		//LogUtils.log("update-bone:"+bones.get(i).getName());
 		
+		//bones.get(i).setScale(1, 1, 1);//test
+		if(bones.get(i).getScale().getX()!=1){
+		//bones.get(i).getPosition().setScalar(1000);
+		}
+		bones.get(i).updateMatrixWorld(true);
+		
 		if(atY==0){//already calcurated for make root(center) pos
 			Vector3AndQuaternion vq=vqMap.get(bones.get(i).getName());
-			ammoControler.updateBone(bones.get(i),vq,divided);
+			ammoControler.updateBone(bones.get(i),vq,divided);//pinned & no need
 		}else{
 			int atX=Integer.parseInt(name[0]);
 			//should i make a body and bone?
