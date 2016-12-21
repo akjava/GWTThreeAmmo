@@ -2,6 +2,8 @@ package com.akjava.gwt.threeammo.client;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.GWTParamUtils;
 import com.akjava.gwt.three.client.js.THREE;
@@ -360,8 +362,18 @@ public Vector3AndQuaternion updateBone(Bone bone,BodyAndMesh bm,btTransform tran
 	updateBone(bone, vq.getVector3(), vq.getQuaternion(),divided);
 	return vq;
 }
+public Vector3AndQuaternion updateBone(Bone bone,BodyAndMesh bm,btTransform transform,double divided,boolean enablePosition){
+	Vector3AndQuaternion vq=getWorldTransform(bm,transform);
+	updateBone(bone, enablePosition?vq.getVector3():null, vq.getQuaternion(),divided);
+	return vq;
+}
 public Vector3AndQuaternion updateBone(Bone bone,Vector3AndQuaternion vq,double divided){
 	updateBone(bone, vq.getVector3(), vq.getQuaternion(),divided);
+	return vq;
+}
+
+public Vector3AndQuaternion updateBone(Bone bone,Vector3AndQuaternion vq,double divided,boolean enablePosition){
+	updateBone(bone, enablePosition?vq.getVector3():null, vq.getQuaternion(),divided);
 	return vq;
 }
 
@@ -373,7 +385,7 @@ public Vector3AndQuaternion updateBone(Bone bone,Vector3AndQuaternion vq,double 
  * 
  * position and rotation is based and ammo'getWorldTransform
  */
-public void updateBone(Bone bone,Vector3 position,Quaternion rotation,double divided){
+public void updateBone(Bone bone,@Nullable Vector3 position,Quaternion rotation,double divided){
 	bone.updateMatrixWorld(true);
 	Quaternion q2=THREE.Quaternion().setFromRotationMatrix(bone.getMatrixWorld());
 	q2.conjugate();
@@ -382,12 +394,15 @@ public void updateBone(Bone bone,Vector3 position,Quaternion rotation,double div
 	q2.multiply(q3);
 	bone.getQuaternion().copy(q2);
 	
+	if(position!=null){
 	Vector3 v1=THREE.Vector3();
 	v1.copy(position).divideScalar(divided);//some scale modifying,
 	bone.worldToLocal(v1);//what is this? vector.applyMatrix4( m1.getInverse( this.matrixWorld ) );
 	v1.add(bone.getPosition());
 	
 	bone.getPosition().copy(v1);
+	}
+	
 	bone.updateMatrixWorld(true);
 }
 public void updateBone(Bone bone,Vector3 position,Quaternion rotation){
