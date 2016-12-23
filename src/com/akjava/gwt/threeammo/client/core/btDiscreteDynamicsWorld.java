@@ -5,12 +5,17 @@ public class btDiscreteDynamicsWorld extends AmmoObject{
 protected btDiscreteDynamicsWorld(){}
 
 /**
+ * maxSubSteps really working?
  * 
  * @param timeStep usually 1.0/60
  * @Ammo fixed 1.0/60 default
  */
 public final  native void stepSimulation(double timeStep,int maxSubSteps)/*-{
 this.stepSimulation(timeStep,maxSubSteps);
+}-*/;
+
+public final  native void stepSimulation(double timeStep,int maxSubSteps,double fixedTimeStep)/*-{
+this.stepSimulation(timeStep,maxSubSteps,fixedTimeStep);
 }-*/;
 
 public final  native void addRigidBody(btRigidBody body)/*-{

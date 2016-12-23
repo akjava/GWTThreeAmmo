@@ -37,6 +37,16 @@ public Scene getScene() {
 
 private int substeps=0;
 
+private double fixedTimeStep=0;
+
+public double getFixedTimeStep() {
+	return fixedTimeStep;
+}
+
+public void setFixedTimeStep(double fixedTimeStep) {
+	this.fixedTimeStep = fixedTimeStep;
+}
+
 public int getSubsteps() {
 	return substeps;
 }
@@ -102,6 +112,9 @@ public AmmoControler(Scene scene, btDiscreteDynamicsWorld world) {
 private btDiscreteDynamicsWorld world;
 
 
+/*
+ * ammo default time is 1/60 fps
+ */
 public void update(){
 	update(1.0/60);
 }
@@ -119,7 +132,11 @@ public void destroyWorld(){
 }
 
 public void update(double dt){
+	if(fixedTimeStep!=0){
+		world.stepSimulation(dt, substeps,fixedTimeStep);	
+	}else{
 	world.stepSimulation(dt, substeps);
+	}
 	for(BodyAndMesh object:autoSyncingBodies){
 		object.syncTransform();
 	}
